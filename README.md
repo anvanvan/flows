@@ -1,4 +1,4 @@
-# Superpowers
+# Flows
 
 ## Prerequisites
 
@@ -75,13 +75,13 @@ A comprehensive skills library of proven techniques, patterns, and workflows for
 - **Meta Skills** - Creating, testing, and sharing skills
 
 Plus:
-- **Slash Commands** - `/superpowers:brainstorm`, `/superpowers:write-plan`, `/superpowers:execute-plan`
+- **Slash Commands** - `/flows:brainstorm`, `/flows:write-plan`, `/flows:execute-plan`
 - **Automatic Integration** - Skills activate automatically when relevant
 - **Consistent Workflows** - Systematic approaches to common engineering tasks
 
 ## Learn More
 
-Read the introduction: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
+Read the introduction: [Flows for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
 
 ## Installation
 
@@ -90,13 +90,13 @@ Read the introduction: [Superpowers for Claude Code](https://blog.fsck.com/2025/
 In Claude Code, register the marketplace first:
 
 ```bash
-/plugin marketplace add obra/superpowers-marketplace
+/plugin marketplace add ~/tools/flows
 ```
 
 Then install the plugin from this marketplace:
 
 ```bash
-/plugin install superpowers@superpowers-marketplace
+/plugin install flows@flows
 ```
 
 ### Verify Installation
@@ -109,16 +109,16 @@ Check that commands appear:
 
 ```
 # Should see:
-# /superpowers:brainstorm - Interactive design refinement
-# /superpowers:write-plan - Create implementation plan
-# /superpowers:execute-plan - Execute plan in batches
+# /flows:brainstorm - Interactive design refinement
+# /flows:write-plan - Create implementation plan
+# /flows:execute-plan - Execute plan in batches
 ```
 
 ### Codex (Experimental)
 
 **Note:** Codex support is experimental and may require refinement based on user feedback.
 
-Tell Codex to fetch https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md and follow the instructions.
+Tell Codex to fetch https://raw.githubusercontent.com/anvanvan/flows/refs/heads/main/.codex/INSTALL.md and follow the instructions.
 
 ## Quick Start
 
@@ -126,17 +126,17 @@ Tell Codex to fetch https://raw.githubusercontent.com/obra/superpowers/refs/head
 
 **Brainstorm a design:**
 ```
-/superpowers:brainstorm
+/flows:brainstorm
 ```
 
 **Create an implementation plan:**
 ```
-/superpowers:write-plan
+/flows:write-plan
 ```
 
 **Execute the plan:**
 ```
-/superpowers:execute-plan
+/flows:execute-plan
 ```
 
 ### Automatic Skill Activation
@@ -227,5 +227,5 @@ MIT License - see LICENSE file for details
 
 ## Support
 
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Marketplace**: https://github.com/obra/superpowers-marketplace
+- **Issues**: https://github.com/anvanvan/flows/issues
+- **Marketplace**: https://github.com/obra/flows
