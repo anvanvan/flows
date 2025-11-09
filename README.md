@@ -1,5 +1,69 @@
 # Superpowers
 
+## Prerequisites
+
+This fork uses `git stage-lines` and `git unstage-lines` for granular staging control, which is essential for parallel agent workflows. These are custom git aliases that require setup.
+
+### Quick Setup (Recommended)
+
+Run the automated setup script:
+
+```bash
+bash ~/tools/flows/setup.sh
+```
+
+This will install `patchutils` (if needed) and configure the git aliases automatically.
+
+### Manual Setup
+
+If you prefer to set up manually:
+
+#### 1. Install patchutils
+
+```bash
+brew install patchutils
+```
+
+This provides the `filterdiff` command used by the git aliases.
+
+#### 2. Configure git aliases
+
+Add these aliases to your global git configuration:
+
+```bash
+git config --global alias.stage-lines '!f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f'
+
+git config --global alias.unstage-lines '!f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f'
+```
+
+#### 3. Verify setup
+
+Check that aliases are configured:
+
+```bash
+git config --global --get-regexp "alias\.(stage-lines|unstage-lines)"
+```
+
+Expected output:
+```
+alias.stage-lines !f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f
+alias.unstage-lines !f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f
+```
+
+### Usage
+
+Once configured, you can stage specific line ranges:
+
+```bash
+# Stage lines 10-25 from a file
+git stage-lines 10-25 path/to/file.py
+
+# Unstage lines 15-20 from staged changes
+git unstage-lines 15-20 path/to/file.py
+```
+
+This allows multiple parallel agents to work on the same files and stage only their specific changes without conflicts.
+
 A comprehensive skills library of proven techniques, patterns, and workflows for AI coding assistants.
 
 ## What You Get
