@@ -62,7 +62,7 @@ git checkout -b "add-${skill_name}-skill"
 
 ```bash
 # Add and commit
-git add skills/your-skill-name/
+git stage-lines skills/your-skill-name/
 git commit -m "Add ${skill_name} skill
 
 $(cat <<'EOF'
@@ -117,7 +117,7 @@ git checkout -b "add-async-patterns-skill"
 # (Work on skills/async-patterns/SKILL.md)
 
 # 4. Commit
-git add skills/async-patterns/
+git stage-lines skills/async-patterns/
 git commit -m "Add async-patterns skill
 
 Patterns for handling asynchronous operations in tests and application code.

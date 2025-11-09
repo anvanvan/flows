@@ -1,4 +1,68 @@
-# Superpowers
+# Flows
+
+## Prerequisites
+
+This fork uses `git stage-lines` and `git unstage-lines` for granular staging control, which is essential for parallel agent workflows. These are custom git aliases that require setup.
+
+### Quick Setup (Recommended)
+
+Run the automated setup script:
+
+```bash
+bash ~/tools/flows/setup.sh
+```
+
+This will install `patchutils` (if needed) and configure the git aliases automatically.
+
+### Manual Setup
+
+If you prefer to set up manually:
+
+#### 1. Install patchutils
+
+```bash
+brew install patchutils
+```
+
+This provides the `filterdiff` command used by the git aliases.
+
+#### 2. Configure git aliases
+
+Add these aliases to your global git configuration:
+
+```bash
+git config --global alias.stage-lines '!f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f'
+
+git config --global alias.unstage-lines '!f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f'
+```
+
+#### 3. Verify setup
+
+Check that aliases are configured:
+
+```bash
+git config --global --get-regexp "alias\.(stage-lines|unstage-lines)"
+```
+
+Expected output:
+```
+alias.stage-lines !f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f
+alias.unstage-lines !f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f
+```
+
+### Usage
+
+Once configured, you can stage specific line ranges:
+
+```bash
+# Stage lines 10-25 from a file
+git stage-lines 10-25 path/to/file.py
+
+# Unstage lines 15-20 from staged changes
+git unstage-lines 15-20 path/to/file.py
+```
+
+This allows multiple parallel agents to work on the same files and stage only their specific changes without conflicts.
 
 A comprehensive skills library of proven techniques, patterns, and workflows for AI coding assistants.
 
@@ -11,13 +75,13 @@ A comprehensive skills library of proven techniques, patterns, and workflows for
 - **Meta Skills** - Creating, testing, and sharing skills
 
 Plus:
-- **Slash Commands** - `/superpowers:brainstorm`, `/superpowers:write-plan`, `/superpowers:execute-plan`
+- **Slash Commands** - `/flows:brainstorm`, `/flows:write-plan`, `/flows:execute-plan`
 - **Automatic Integration** - Skills activate automatically when relevant
 - **Consistent Workflows** - Systematic approaches to common engineering tasks
 
 ## Learn More
 
-Read the introduction: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
+Read the introduction: [Flows for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
 
 ## Installation
 
@@ -26,13 +90,13 @@ Read the introduction: [Superpowers for Claude Code](https://blog.fsck.com/2025/
 In Claude Code, register the marketplace first:
 
 ```bash
-/plugin marketplace add obra/superpowers-marketplace
+/plugin marketplace add ~/tools/flows
 ```
 
 Then install the plugin from this marketplace:
 
 ```bash
-/plugin install superpowers@superpowers-marketplace
+/plugin install flows@flows
 ```
 
 ### Verify Installation
@@ -45,16 +109,16 @@ Check that commands appear:
 
 ```
 # Should see:
-# /superpowers:brainstorm - Interactive design refinement
-# /superpowers:write-plan - Create implementation plan
-# /superpowers:execute-plan - Execute plan in batches
+# /flows:brainstorm - Interactive design refinement
+# /flows:write-plan - Create implementation plan
+# /flows:execute-plan - Execute plan in batches
 ```
 
 ### Codex (Experimental)
 
 **Note:** Codex support is experimental and may require refinement based on user feedback.
 
-Tell Codex to fetch https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md and follow the instructions.
+Tell Codex to fetch https://raw.githubusercontent.com/anvanvan/flows/refs/heads/main/.codex/INSTALL.md and follow the instructions.
 
 ## Quick Start
 
@@ -62,17 +126,17 @@ Tell Codex to fetch https://raw.githubusercontent.com/obra/superpowers/refs/head
 
 **Brainstorm a design:**
 ```
-/superpowers:brainstorm
+/flows:brainstorm
 ```
 
 **Create an implementation plan:**
 ```
-/superpowers:write-plan
+/flows:write-plan
 ```
 
 **Execute the plan:**
 ```
-/superpowers:execute-plan
+/flows:execute-plan
 ```
 
 ### Automatic Skill Activation
@@ -112,7 +176,7 @@ Skills activate automatically when relevant. For example:
 - **writing-skills** - Create new skills following best practices
 - **sharing-skills** - Contribute skills back via branch and PR
 - **testing-skills-with-subagents** - Validate skill quality
-- **using-superpowers** - Introduction to the skills system
+- **using-flows** - Introduction to the skills system
 
 ### Commands
 
@@ -124,7 +188,7 @@ All commands are thin wrappers that activate the corresponding skill:
 
 ## How It Works
 
-1. **SessionStart Hook** - Loads the `using-superpowers` skill at session start
+1. **SessionStart Hook** - Loads the `using-flows` skill at session start
 2. **Skills System** - Uses Claude Code's first-party skills system
 3. **Automatic Discovery** - Claude finds and uses relevant skills for your task
 4. **Mandatory Workflows** - When a skill exists for your task, using it becomes required
@@ -163,5 +227,5 @@ MIT License - see LICENSE file for details
 
 ## Support
 
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Marketplace**: https://github.com/obra/superpowers-marketplace
+- **Issues**: https://github.com/anvanvan/flows/issues
+- **Marketplace**: https://github.com/obra/flows

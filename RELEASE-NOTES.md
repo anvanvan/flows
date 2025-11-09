@@ -1,3 +1,19 @@
+# Flows Release Notes
+
+> **Note:** This is a customized fork of the original superpowers plugin by obra.
+>
+> **Customizations:**
+> - Renamed from "superpowers" to "flows" for brevity
+> - Replaced `git add` with `git stage-lines` for parallel agent workflows
+> - Added prerequisites documentation for git stage-lines setup
+> - Optimized for multi-agent development scenarios
+>
+> **Original project:** https://github.com/obra/superpowers (upstream)
+>
+> **Prerequisites:** This fork requires `patchutils` (via brew) and custom git aliases. See README.md for setup instructions.
+
+---
+
 # Superpowers Release Notes
 
 ## v3.4.1 (2025-10-31)
