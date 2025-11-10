@@ -53,6 +53,14 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
   - Version compatibility matrices
   - Search for: official quickstarts, setup guides, integration examples, troubleshooting docs
 
+**WHEN WRITING IMPLEMENTATION STEPS:**
+- **INVOKE WEB-RESEARCHER IF STEPS INVOLVE:**
+  - External API calls (syntax verification needed)
+  - Library-specific patterns (need current examples)
+  - Configuration formats (may have version-specific differences)
+  - CLI commands (flags and options may have changed)
+  - Search for: API signatures, required parameters, authentication flows, configuration schemas
+
 ## Task Structure
 
 ```markdown
