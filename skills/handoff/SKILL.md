@@ -75,12 +75,21 @@ Review what you've extracted. Ask yourself:
 - If code changed, do I have commit context? (might be in conversation)
 - Is the analysis complete enough to understand the problem?
 
-**Decision point:**
-- If context seems complete → proceed to Step 4
-- If commits are obviously missing and code has changed → ask: "No commits found in conversation. Spawn subagent to get git history for these files?"
+**Commit handling logic:**
+1. If commits found in conversation → use those, proceed to Step 4
+2. If NO commits in conversation AND files present → spawn Explore agent to get git history
+3. If NO commits and NO files → skip commits section, proceed to Step 4
+
+**When spawning Explore agent for git history:**
+- Task: "Get last 10 commits for each of these files: [list file paths]"
+- The agent should use: `git log -n 10 --oneline -- <filepath>` for each file
+- Deduplicate commits across files (same commit may touch multiple files)
+- Format as: `abc1234 - Commit subject line`
+
+**File completeness check:**
 - If files seem incomplete → ask: "Should I spawn subagent to search for additional related files?"
 
-Only ask if there's genuine uncertainty. Trust the conversation context first.
+Only ask about files if there's genuine uncertainty. Trust the conversation context first.
 
 ### Step 4: Format the Handoff Prompt
 
