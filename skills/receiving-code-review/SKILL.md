@@ -78,6 +78,13 @@ IF suggestion seems wrong:
 
 IF can't easily verify:
   Say so: "I can't verify this without [X]. Should I [investigate/ask/proceed]?"
+  **INVOKE WEB-RESEARCHER TO VERIFY:**
+    - Platform/API version compatibility claims
+    - Security best practices referenced
+    - Performance characteristics claimed
+    - Cross-platform behavior assertions
+    - Deprecated API warnings
+    - Search: official docs, changelogs, security advisories, compatibility matrices
 
 IF conflicts with your human partner's prior decisions:
   Stop and discuss with your human partner first
