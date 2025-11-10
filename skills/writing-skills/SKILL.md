@@ -401,6 +401,16 @@ Different skill types need different test approaches:
 
 **Examples:** API documentation, command references, library guides
 
+**BEFORE CREATING REFERENCE SKILL:**
+- **INVOKE WEB-RESEARCHER** to gather authoritative sources:
+  - Official API documentation (current version)
+  - Command-line help output (latest version)
+  - Library reference documentation
+  - Code examples from official repos
+  - Migration guides for version changes
+- Ensure information is current and authoritative
+- Cite sources in skill (version numbers, URLs)
+
 **Test with:**
 - Retrieval scenarios: Can they find the right information?
 - Application scenarios: Can they use what they found correctly?
