@@ -51,6 +51,20 @@ Task tool (general-purpose):
     4. Commit your work
     5. Report back
 
+    ## Git Workflow for Parallel Safety
+
+    Always chain stage + commit to prevent race conditions with parallel agents:
+
+    **Single file:**
+    git stage-lines new-file.js && git commit -m "feat: task description"
+    git stage-lines 1-20,36 file.js && git commit -m "feat: task description"
+
+    **Multiple files:**
+    git stage-lines 1-20,36 file.js && git stage-lines new-test.js && git commit -m "feat: ..."
+
+    **Why line ranges:** Prevents staging unrelated changes from other parallel work.
+    Check line numbers: `git diff file.js`
+
     Work from: [directory]
 
     Report: What you implemented, what you tested, test results, files changed, any issues

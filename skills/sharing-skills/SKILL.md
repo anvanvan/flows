@@ -61,15 +61,11 @@ git checkout -b "add-${skill_name}-skill"
 ### 4. Commit Changes
 
 ```bash
+# Chain stage + commit to minimize race conditions with parallel work
+
 # For NEW skills (untracked files/directories):
-# No line ranges needed - stages entire directory
-git stage-lines skills/your-skill-name/
-
-# For MODIFYING existing skills (tracked files):
-# Use line ranges to stage specific changes
-# git stage-lines 1-50 skills/existing-skill/SKILL.md
-
-git commit -m "Add ${skill_name} skill
+git stage-lines skills/your-skill-name/ && \
+  git commit -m "Add ${skill_name} skill
 
 $(cat <<'EOF'
 Brief description of what this skill does and why it's useful.
@@ -77,6 +73,10 @@ Brief description of what this skill does and why it's useful.
 Tested with: [describe testing approach]
 EOF
 )"
+
+# For MODIFYING existing skills (tracked files):
+# Use line ranges to stage specific changes (e.g., 1-20,36)
+# git stage-lines 1-20,36 skills/existing-skill/SKILL.md && git commit -m "..."
 ```
 
 ### 5. Push to Your Fork
@@ -123,9 +123,9 @@ git checkout -b "add-async-patterns-skill"
 # (Work on skills/async-patterns/SKILL.md)
 
 # 4. Commit
-# Stage new untracked skill directory (no line ranges needed)
-git stage-lines skills/async-patterns/
-git commit -m "Add async-patterns skill
+# Chain stage + commit to minimize race conditions
+git stage-lines skills/async-patterns/ && \
+  git commit -m "Add async-patterns skill
 
 Patterns for handling asynchronous operations in tests and application code.
 

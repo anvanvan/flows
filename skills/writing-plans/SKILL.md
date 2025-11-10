@@ -99,13 +99,13 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-# Stage the new test file (untracked - line ranges optional, will stage entire file)
-git stage-lines tests/path/test.py
-# Stage the specific implementation changes (tracked - use line ranges from git diff)
-git stage-lines 45-52 src/path/file.py
-git commit -m "feat: implement feature X per Task N"
+# Chain stage + commit to minimize race conditions with parallel work
+git stage-lines tests/path/test.py && \
+  git stage-lines 1-20,36 src/path/file.py && \
+  git commit -m "feat: implement feature X per Task N"
 
 # TIP: Use `git diff src/path/file.py` to see line numbers for your changes
+# TIP: Multi-range syntax (1-20,36) stages only your changes, not others' work
 ```
 ```
 
