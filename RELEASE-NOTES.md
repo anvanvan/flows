@@ -14,6 +14,22 @@
 
 ---
 
+## Flows v1.1.0 (2025-11-10)
+
+### Enhancements
+
+**Git stage-lines and unstage-lines now support untracked files**
+- Enhanced `git stage-lines` and `git unstage-lines` to automatically detect file state
+- Untracked files can now be staged without specifying line ranges: `git stage-lines untracked-file.js`
+- Tracked files continue to require line ranges: `git stage-lines 10-20 tracked-file.js`
+- The commands automatically determine which mode to use based on git status
+- **Backwards compatible:** All existing usage patterns continue to work
+- Updated `setup.sh` with new alias implementations that provide automatic file state detection
+
+This enhancement streamlines the workflow for parallel agent development by eliminating the need to manually check whether a file is tracked before using `git stage-lines`.
+
+---
+
 # Superpowers Release Notes
 
 ## v3.4.1 (2025-10-31)
