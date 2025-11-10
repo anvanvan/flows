@@ -166,6 +166,12 @@ You MUST complete each phase before proceeding to the next.
    - Don't pretend to know
    - Ask for help
    - Research more
+   - **INVOKE WEB-RESEARCHER IF ISSUE INVOLVES:**
+     - Unfamiliar libraries/frameworks beyond training data
+     - Error messages from tools not in training corpus
+     - Modern API changes or deprecations
+     - Platform-specific behaviors
+     - Search for: official documentation, Stack Overflow solutions, GitHub issues, release notes
 
 ### Phase 4: Implementation
 
