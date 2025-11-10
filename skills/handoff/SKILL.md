@@ -1,0 +1,173 @@
+---
+name: "handoff"
+description: "Create context handoff for new Claude session - extracts issue, files, commits, and analysis"
+---
+
+# Handoff Command
+
+You are acting as a **context engineer**. Your job is to create a complete, token-efficient handoff prompt that can be pasted into a new Claude session.
+
+## User Input
+
+The user provided: {{ARGS}}
+
+## Your Process
+
+### Step 1: Parse & Identify Issue
+
+Extract the issue identifier from the user's input. Look for:
+- Numbered references: "issue 1", "issue 2", "problem 1"
+- Keywords: "code duplication", "debugging code", "performance issue"
+- Descriptive phrases: "the duplication problem from above"
+
+Search the conversation history backwards to find the matching issue. Look for patterns like:
+- Numbered lists: "1. Massive Code Duplication - SOLID Violation"
+- Section headers: "## CRITICAL ISSUES" followed by numbered items
+- Bold markers: "**1. Issue Title**"
+- Keywords matching user's description
+
+Extract:
+- Full issue title
+- Complete description and impact assessment
+- Your analysis of the problem
+- Any severity markers or categorization
+
+### Step 2: Extract Context from Conversation
+
+Scan the conversation for all relevant context. Be thorough:
+
+**Files (extract ALL mentioned):**
+- Full paths: `apps/web/src/modules/calendar/timeline/Timeline.tsx`
+- With line numbers: `Timeline.tsx:456-569`, `EventContent.tsx:223-304`
+- Partial paths mentioned in context: "Timeline.tsx", "createEventOnDrop.tsx"
+- Related files in the same discussion area
+
+Capture files with their line number references when available.
+
+**Commits:**
+- Full SHA hashes: `abc1234567890...`
+- Short hashes: `abc1234`
+- Commit references: "the commit that added drag preview"
+- Any git history discussed in relation to this issue
+
+**Analysis & Context:**
+- Your assessment of the problem
+- Impact statements ("Bug fixes must be applied twice", "~200 lines of redundant code")
+- Why this is an issue (SOLID violations, DRY violations, maintenance burden)
+- Any architectural observations
+
+**Learnings & Patterns:**
+- Patterns you discovered
+- Anti-patterns identified
+- Root causes
+- Related code smells or issues
+
+**Recommended Solution:**
+- Your proposed approach
+- Alternative solutions discussed
+- Implementation suggestions
+- Testing considerations
+
+### Step 3: Assess Completeness
+
+Review what you've extracted. Ask yourself:
+- Do I have the files where the issue occurs?
+- If code changed, do I have commit context? (might be in conversation)
+- Is the analysis complete enough to understand the problem?
+
+**Decision point:**
+- If context seems complete → proceed to Step 4
+- If commits are obviously missing and code has changed → ask: "No commits found in conversation. Spawn subagent to get git history for these files?"
+- If files seem incomplete → ask: "Should I spawn subagent to search for additional related files?"
+
+Only ask if there's genuine uncertainty. Trust the conversation context first.
+
+### Step 4: Format the Handoff Prompt
+
+Use this exact structure:
+
+```markdown
+# [Issue Title]
+
+## Context & Analysis
+[Your original analysis from conversation, including:
+- Problem description
+- Impact assessment (lines duplicated, maintenance burden, etc.)
+- Why this matters (SOLID violations, DRY violations, etc.)
+- Any architectural observations]
+
+## Files
+- path/to/file1.tsx:line-range
+- path/to/file2.tsx:line-range
+- path/to/related-file.tsx
+
+*Read these files to verify current state - code may have changed since this analysis.*
+
+## Recent Commits
+[If commits found in conversation, list them as:
+abc1234 - Commit subject line
+def5678 - Another commit subject
+
+If no commits in conversation, omit this section entirely]
+
+## Learnings & Patterns
+[Extracted from conversation:
+- Patterns discovered
+- Anti-patterns identified
+- Root causes found
+- Related observations]
+
+## Recommended Solution
+[Your proposed approach from the conversation:
+- How to fix it
+- Where to refactor
+- What principles to apply
+- Any implementation notes]
+
+## Task
+[Clear, actionable description of what needs to be done:
+- Specific goal
+- Success criteria
+- What to eliminate/fix/implement]
+```
+
+### Step 5: Copy to Clipboard
+
+Detect the platform and use the appropriate copy command:
+- macOS: `pbcopy`
+- Linux: `xclip -selection clipboard` or `xsel --clipboard`
+- Windows/WSL: `clip.exe`
+
+Use the Bash tool to copy the formatted handoff prompt to clipboard.
+
+Then confirm to the user:
+"✓ Handoff prompt copied to clipboard. Ready to paste into new Claude session."
+
+## Edge Cases
+
+**Issue not found:**
+- Show what you searched for
+- Ask user to clarify which issue or provide more context
+
+**No files mentioned:**
+- Warn: "No file references found in conversation about this issue."
+- Ask: "Should I search the codebase for related files?"
+
+**Multiple matching issues:**
+- List all matches with brief descriptions
+- Ask user to specify which one
+
+**Ambiguous input:**
+- Show what you interpreted
+- Ask for confirmation before proceeding
+
+## Important Principles
+
+1. **Extract, don't invent** - Only use what's in the conversation
+2. **Be thorough** - Include all mentioned files, even if they seem minor
+3. **Token efficient** - No redundant text, file paths only (no contents)
+4. **Context rich** - Preserve your analysis and learnings
+5. **Actionable** - End with a clear task statement
+6. **Trust conversation first** - Only spawn subagents when genuinely needed
+
+Your goal: Create a handoff prompt that allows a fresh Claude session to understand the problem and solution approach immediately, without asking clarifying questions.
