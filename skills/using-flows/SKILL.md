@@ -48,6 +48,42 @@ If you catch yourself thinking ANY of these thoughts, STOP. You are rationalizin
 
 If a skill for your task exists, you must use it or you will fail at your task.
 
+## When to Invoke Web-Researcher Agent
+
+**INVOKE WEB-RESEARCHER when you need:**
+
+**Current External Information:**
+- API documentation (current version, not training data)
+- Library usage patterns released after training cutoff
+- Modern framework best practices
+- Package installation procedures
+- Version compatibility matrices
+
+**Technical Verification:**
+- Verify claims in code review feedback
+- Check error messages against current tool versions
+- Confirm platform-specific behaviors
+- Validate security recommendations
+
+**Research and Comparison:**
+- Compare libraries/frameworks for brainstorming
+- Find reference implementations
+- Gather benchmark/performance data
+- Understand community adoption patterns
+
+**Documentation Sources:**
+- Official documentation sites
+- Example repositories on GitHub
+- GitHub issues for known problems
+- Stack Overflow solutions
+- Changelogs and migration guides
+
+**DO NOT invoke web-researcher for:**
+- Information in existing codebase files
+- Patterns documented in skills
+- General programming knowledge in training data
+- Questions answerable from local context
+
 ## Skills with Checklists
 
 If a skill has a checklist, YOU MUST create TodoWrite todos for EACH item.
