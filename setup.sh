@@ -48,8 +48,59 @@ if [ -n "$existing_stage" ] || [ -n "$existing_unstage" ]; then
 fi
 
 # Configure the aliases
-git config --global alias.stage-lines '!f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f'
-git config --global alias.unstage-lines '!f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f'
+git config --global alias.stage-lines '!f() {
+  # Handle parameter patterns
+  if [ -z "$2" ]; then
+    file="$1"
+    lines=""
+  else
+    lines="$1"
+    file="$2"
+  fi
+
+  # Check if file is tracked
+  if git ls-files --error-unmatch "$file" 2>/dev/null; then
+    # Tracked file: require line ranges
+    if [ -z "$lines" ]; then
+      echo "Error: Please specify line ranges (e.g., 1-5,8,10-12)" >&2
+      echo "Usage: git stage-lines <lines> <file>" >&2
+      echo "       git stage-lines <untracked-file>" >&2
+      return 1
+    fi
+    # Use filterdiff for line-level staging
+    git diff "$file" | filterdiff --lines="$lines" | git apply --cached --unidiff-zero
+  else
+    # Untracked file: stage entire file
+    git add "$file"
+  fi
+}; f'
+
+git config --global alias.unstage-lines '!f() {
+  # Handle parameter patterns
+  if [ -z "$2" ]; then
+    file="$1"
+    lines=""
+  else
+    lines="$1"
+    file="$2"
+  fi
+
+  # Check if file is newly added
+  if git diff --cached --diff-filter=A --name-only | grep -qx "$file"; then
+    # Newly added file: remove from index, make untracked
+    git rm --cached "$file"
+  else
+    # Partial staged changes: require line ranges
+    if [ -z "$lines" ]; then
+      echo "Error: Please specify line ranges (e.g., 1-5,8,10-12)" >&2
+      echo "Usage: git unstage-lines <lines> <file>" >&2
+      echo "       git unstage-lines <newly-added-file>" >&2
+      return 1
+    fi
+    # Use filterdiff reverse for line-level unstaging
+    git diff --cached "$file" | filterdiff --lines="$lines" | git apply --cached --unidiff-zero --reverse
+  fi
+}; f'
 
 echo "✓ Git aliases configured"
 echo ""
