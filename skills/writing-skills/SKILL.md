@@ -177,6 +177,13 @@ Use words Claude would search for:
 - Synonyms: "timeout/hang/freeze", "cleanup/teardown/afterEach"
 - Tools: Actual commands, library names, file types
 
+**INVOKE WEB-RESEARCHER TO VERIFY:**
+- Current error message text (may change between versions)
+- Exact command syntax (flags and options)
+- Library names and package managers
+- File type extensions and conventions
+- Search for: official error catalogs, command help output, package registries
+
 ### 3. Descriptive Naming
 
 **Use active voice, verb-first:**
