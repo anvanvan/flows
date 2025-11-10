@@ -99,7 +99,9 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git stage-lines tests/path/test.py src/path/file.py
+# Stage the new test file (untracked - no line ranges needed)
+# and the implementation changes (tracked - specify line ranges)
+git stage-lines tests/path/test.py 1-50 src/path/file.py
 git commit -m "feat: add specific feature"
 ```
 ```
