@@ -64,6 +64,46 @@ git unstage-lines 15-20 path/to/file.py
 
 This allows multiple parallel agents to work on the same files and stage only their specific changes without conflicts.
 
+## Web-Researcher Agent
+
+Flows includes an intelligent web research agent that automatically activates when you need current external information.
+
+### Automatic Triggering
+
+The agent activates when you mention research keywords:
+- "research online..."
+- "web search for..."
+- "search the web..."
+- "look up online..."
+- "find information about..."
+- "@agent-web-researcher"
+
+### Manual Invocation
+
+Explicitly invoke the agent in any context:
+```
+@agent-web-researcher find the latest Next.js 14 app router patterns
+```
+
+### Research Capabilities
+
+The web-researcher agent:
+- Searches official documentation and authoritative sources
+- Fetches and analyzes current API specifications
+- Finds real-world examples and GitHub repositories
+- Verifies version-specific information
+- Provides sourced summaries with direct links
+
+### Use Cases
+
+- **Debugging**: Research unfamiliar error messages and platform issues
+- **Design**: Compare frameworks and find modern best practices
+- **Planning**: Verify API syntax and integration patterns
+- **Reviews**: Validate technical claims with authoritative sources
+- **Skills**: Source current documentation for reference skills
+
+The agent is integrated throughout flows skills with strategic invocation points in debugging, brainstorming, planning, and skill-creation workflows.
+
 A comprehensive skills library of proven techniques, patterns, and workflows for AI coding assistants.
 
 ## What You Get
