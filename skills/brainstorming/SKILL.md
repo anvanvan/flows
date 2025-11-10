@@ -15,6 +15,13 @@ Start by understanding the current project context, then ask questions one at a 
 
 **Understanding the idea:**
 - Check out the current project state first (files, docs, recent commits)
+- **INVOKE WEB-RESEARCHER WHEN USER MENTIONS:**
+  - Specific frameworks/libraries you're unfamiliar with
+  - "Modern" or "current best practices" in a domain
+  - Comparison requests between tools/approaches
+  - Integration patterns with external services
+  - Industry standards or conventions
+  - Search for: architecture patterns, API capabilities, community best practices, migration guides
 - Ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
