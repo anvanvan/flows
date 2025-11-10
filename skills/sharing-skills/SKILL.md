@@ -61,8 +61,14 @@ git checkout -b "add-${skill_name}-skill"
 ### 4. Commit Changes
 
 ```bash
-# Add and commit
+# For NEW skills (untracked files/directories):
+# No line ranges needed - stages entire directory
 git stage-lines skills/your-skill-name/
+
+# For MODIFYING existing skills (tracked files):
+# Use line ranges to stage specific changes
+# git stage-lines 1-50 skills/existing-skill/SKILL.md
+
 git commit -m "Add ${skill_name} skill
 
 $(cat <<'EOF'
@@ -117,6 +123,7 @@ git checkout -b "add-async-patterns-skill"
 # (Work on skills/async-patterns/SKILL.md)
 
 # 4. Commit
+# Stage new untracked skill directory (no line ranges needed)
 git stage-lines skills/async-patterns/
 git commit -m "Add async-patterns skill
 
