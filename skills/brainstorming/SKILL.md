@@ -48,15 +48,29 @@ Start by understanding the current project context, then ask questions one at a 
 
 ## After the Design
 
-**Documentation:**
-- Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-- Use elements-of-style:writing-clearly-and-concisely skill if available
-- Commit the design document to git
+Once the user validates the final design section, present next steps using AskUserQuestion:
 
-**Implementation (if continuing):**
-- Ask: "Ready to set up for implementation?"
-- Use flows:using-git-worktrees to create isolated workspace
-- Use flows:writing-plans to create detailed implementation plan
+**Use AskUserQuestion with these options:**
+- Question: "The design is complete! What would you like to do next?"
+- Header: "Next steps"
+- multiSelect: false
+- Options:
+  1. **"Create detailed implementation plan"**
+     - Description: "Use flows:writing-plans to break this design into specific implementation tasks"
+  2. **"Implement with subagent-driven-development"**
+     - Description: "Start implementation now using fresh agents per task with code review between tasks"
+  3. **"Other"** (auto-provided)
+     - User can provide free text like "I have more feedback about the design..."
+
+**Handling the user's choice:**
+
+- **If "Create detailed implementation plan"**: Use flows:writing-plans skill immediately with the design context
+- **If "Implement with subagent-driven-development"**: Use flows:subagent-driven-development skill to begin implementation
+- **If "Other" (more feedback)**: Return to the design discussion, ask clarifying questions, and update the relevant sections
+
+**Documentation:**
+- Design documents are optional - user can request separately if needed
+- The conversation history contains the complete design context for planning or implementation
 
 ## Key Principles
 
