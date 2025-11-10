@@ -1010,6 +1010,13 @@ Skills run in the code execution environment with platform-specific limitations:
 
 List required packages in your SKILL.md and verify they're available in the [code execution tool documentation](/en/docs/agents-and-tools/tool-use/code-execution-tool).
 
+**INVOKE WEB-RESEARCHER TO VERIFY:**
+- Current package availability and versions
+- Installation requirements and dependencies
+- Platform compatibility (OS, architecture)
+- Alternative packages if primary unavailable
+- Search for: package registries (PyPI, npm, etc.), official docs, compatibility matrices
+
 ### Runtime environment
 
 Skills run in a code execution environment with filesystem access, bash commands, and code execution capabilities. For the conceptual explanation of this architecture, see [The Skills architecture](/en/docs/agents-and-tools/agent-skills/overview#the-skills-architecture) in the overview.
