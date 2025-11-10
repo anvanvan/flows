@@ -1,5 +1,5 @@
 ---
-description: Execute plan in batches with review checkpoints
+description: Execute plan with fresh subagent per task and code review
 ---
 
-Use the executing-plans skill exactly as written
+Use the subagent-driven-development skill exactly as written
