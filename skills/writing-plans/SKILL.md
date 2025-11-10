@@ -44,6 +44,15 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ---
 ```
 
+**BEFORE WRITING PLAN** - If tech stack includes unfamiliar technologies:
+- **INVOKE WEB-RESEARCHER** to understand:
+  - Current installation/setup procedures
+  - API usage patterns and examples
+  - Integration requirements
+  - Common gotchas and best practices
+  - Version compatibility matrices
+  - Search for: official quickstarts, setup guides, integration examples, troubleshooting docs
+
 ## Task Structure
 
 ```markdown
