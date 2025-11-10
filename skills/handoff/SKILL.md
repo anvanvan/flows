@@ -1,6 +1,6 @@
 ---
-name: "handoff"
-description: "Create context handoff for new Claude session - extracts issue, files, commits, and analysis"
+name: handoff
+description: Create context handoff for new Claude session - extracts issue, files, commits, and analysis
 ---
 
 # Handoff Command
