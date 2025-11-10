@@ -28,6 +28,13 @@ Start by understanding the current project context, then ask questions one at a 
 - Focus on understanding: purpose, constraints, success criteria
 
 **Exploring approaches:**
+- **CONSIDER WEB-RESEARCHER BEFORE PROPOSING** if approaches involve:
+  - Libraries/tools released after training cutoff
+  - Framework-specific patterns you're uncertain about
+  - Performance/scalability characteristics needed
+  - Community adoption/maturity assessment
+  - Known issues or limitations
+  - Search for: comparison articles, benchmark data, production case studies, GitHub stars/issues
 - Propose 2-3 different approaches with trade-offs
 - Present options conversationally with your recommendation and reasoning
 - Lead with your recommended option and explain why
