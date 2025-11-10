@@ -112,12 +112,14 @@ Use this exact structure:
 
 *Read these files to verify current state - code may have changed since this analysis.*
 
-## Recent Commits
-[If commits found in conversation, list them as:
+## Relevant Commits
+[Commits that touched the files in this issue:
 abc1234 - Commit subject line
 def5678 - Another commit subject
 
-If no commits in conversation, omit this section entirely]
+Source: {conversation | git history for mentioned files}
+
+If no commits in conversation and no files mentioned, omit this section entirely]
 
 ## Learnings & Patterns
 [Extracted from conversation:
