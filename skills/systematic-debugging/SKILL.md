@@ -131,6 +131,12 @@ You MUST complete each phase before proceeding to the next.
    - If implementing pattern, read reference implementation COMPLETELY
    - Don't skim - read every line
    - Understand the pattern fully before applying
+   - **INVOKE WEB-RESEARCHER WHEN** reference is in external documentation:
+     - Official library documentation (current version needed)
+     - Framework guides (may have updated since training)
+     - External codebases (GitHub repositories)
+     - API specifications (OpenAPI, GraphQL schemas)
+     - Search for: official docs, example repositories, migration guides
 
 3. **Identify Differences**
    - What's different between working and broken?
