@@ -31,9 +31,59 @@ This provides the `filterdiff` command used by the git aliases.
 Add these aliases to your global git configuration:
 
 ```bash
-git config --global alias.stage-lines '!f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f'
+git config --global alias.stage-lines '!f() {
+  # Handle parameter patterns
+  if [ -z "$2" ]; then
+    file="$1"
+    lines=""
+  else
+    lines="$1"
+    file="$2"
+  fi
 
-git config --global alias.unstage-lines '!f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f'
+  # Check if file is tracked
+  if git ls-files --error-unmatch "$file" 2>/dev/null; then
+    # Tracked file: require line ranges
+    if [ -z "$lines" ]; then
+      echo "Error: Please specify line ranges (e.g., 1-5,8,10-12)" >&2
+      echo "Usage: git stage-lines <lines> <file>" >&2
+      echo "       git stage-lines <untracked-file>" >&2
+      return 1
+    fi
+    # Use filterdiff for line-level staging
+    git diff "$file" | filterdiff --lines="$lines" | git apply --cached --unidiff-zero
+  else
+    # Untracked file: stage entire file
+    git add "$file"
+  fi
+}; f'
+
+git config --global alias.unstage-lines '!f() {
+  # Handle parameter patterns
+  if [ -z "$2" ]; then
+    file="$1"
+    lines=""
+  else
+    lines="$1"
+    file="$2"
+  fi
+
+  # Check if file is newly added
+  if git diff --cached --diff-filter=A --name-only | grep -qx "$file"; then
+    # Newly added file: remove from index, make untracked
+    git rm --cached "$file"
+  else
+    # Partial staged changes: require line ranges
+    if [ -z "$lines" ]; then
+      echo "Error: Please specify line ranges (e.g., 1-5,8,10-12)" >&2
+      echo "Usage: git unstage-lines <lines> <file>" >&2
+      echo "       git unstage-lines <newly-added-file>" >&2
+      return 1
+    fi
+    # Use filterdiff reverse for line-level unstaging
+    git diff --cached "$file" | filterdiff --lines="$lines" | git apply --cached --unidiff-zero --reverse
+  fi
+}; f'
 ```
 
 #### 3. Verify setup
@@ -44,23 +94,31 @@ Check that aliases are configured:
 git config --global --get-regexp "alias\.(stage-lines|unstage-lines)"
 ```
 
-Expected output:
-```
-alias.stage-lines !f() { git diff "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero; }; f
-alias.unstage-lines !f() { git diff --cached "$2" | filterdiff --lines="$1" | git apply --cached --unidiff-zero --reverse; }; f
-```
+You should see output showing the configured aliases (formatting may vary).
 
 ### Usage
 
-Once configured, you can stage specific line ranges:
+The commands automatically detect file state and apply the appropriate staging behavior:
 
+**For tracked files with changes** (requires line ranges):
 ```bash
-# Stage lines 10-25 from a file
+# Stage specific lines from a tracked file
 git stage-lines 10-25 path/to/file.py
 
-# Unstage lines 15-20 from staged changes
+# Unstage specific lines from staged changes
 git unstage-lines 15-20 path/to/file.py
 ```
+
+**For untracked or newly-added files** (line ranges optional):
+```bash
+# Stage an entire untracked file
+git stage-lines new-file.js
+
+# Unstage a newly-added file (makes it untracked again)
+git unstage-lines new-file.js
+```
+
+The commands detect whether a file is tracked or untracked and automatically use the appropriate staging method. For tracked files, line ranges are required to enable granular control. For untracked files, the entire file is staged.
 
 This allows multiple parallel agents to work on the same files and stage only their specific changes without conflicts.
 
