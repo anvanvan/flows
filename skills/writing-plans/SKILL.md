@@ -238,8 +238,6 @@ git diff apps/web/.../EventContent.tsx | head -50
 git stage-lines 18,25-31,138,326 apps/web/.../EventContent.tsx && \
   git commit -m "refactor: remove PlaceholderEvent from EventContent"
 ```
-```
-```
 
 ## Remember
 - Exact file paths always
