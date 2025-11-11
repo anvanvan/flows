@@ -96,16 +96,148 @@ def function(input):
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-**Step 5: Commit**
+**Step 5: Commit with Precise Line Staging**
+
+Use semantic tracking during work, then git diff parsing at commit time for surgical precision.
+
+---
+
+**Workflow: Semantic Tracking + Git Diff Parsing**
+
+### Phase 1: Track Changes Semantically (As You Work)
+
+Maintain a mental change log with brief descriptions:
+
+```
+Changes to <filename>:
+1. [What you changed] (~approximate line)
+2. [What you changed] (~approximate lines)
+```
+
+**Example while working on EventContent.tsx:**
+```
+Changes to EventContent.tsx:
+1. Removed PlaceholderEvent import (~line 18)
+2. Changed 7 type unions to remove PlaceholderEvent (~lines 26-162)
+3. Removed setPlaceholderEvent from context (~line 139)
+4. Removed setPlaceholderEvent(null) call (~line 327)
+```
+
+**Purpose:** Keeps you organized. Line numbers are approximate hints only.
+
+---
+
+### Phase 2: Extract Precise Lines (At Commit Time)
+
+**Step 2a: Run git diff with zero context**
+```bash
+git diff --unified=0 apps/web/.../EventContent.tsx
+```
+
+**Step 2b: Extract hunk headers**
+```bash
+git diff --unified=0 apps/web/.../EventContent.tsx | grep "^@@"
+```
+
+**Output shows hunks like:**
+```
+@@ -18,1 +18,0 @@
+@@ -26,7 +25,7 @@
+@@ -139,1 +138,1 @@
+@@ -327,1 +326,0 @@
+```
+
+**Step 2c: Parse hunk format `@@ -<old> +<new> @@`**
+
+Extract from `+<new_start>,<new_count>`:
+
+| Hunk Header | Meaning | Extract |
+|-------------|---------|---------|
+| `@@ -18,1 +18,0 @@` | Deleted 1 line at position 18 | `18` |
+| `@@ -26,7 +25,7 @@` | Changed 7 lines starting at 25 | `25-31` |
+| `@@ -139,1 +138,1 @@` | Changed 1 line at position 138 | `138` |
+| `@@ -327,1 +326,0 @@` | Deleted 1 line at position 326 | `326` |
+| `@@ -50,0 +51,3 @@` | Inserted 3 lines starting at 51 | `51-53` |
+
+**Parsing rules:**
+- Single line (`+N,1`): Extract `N`
+- Range (`+N,C` where C>1): Extract `N-(N+C-1)`
+- Deletion (`+N,0`): Extract `N`
+
+**Step 2d: Combine into comma-separated format**
+```
+18,25-31,138,326
+```
+
+---
+
+### Phase 3: Verify Changes (MANDATORY)
+
+**Before staging, verify changes match your semantic log:**
+```bash
+# REQUIRED: Review human-readable diff
+git diff apps/web/.../EventContent.tsx | head -50
+```
+
+**Check:**
+✓ Import removal visible?
+✓ Type union changes visible?
+✓ Context destructuring change visible?
+✓ setPlaceholderEvent call removal visible?
+
+**If verification fails:** Re-examine your semantic log and parsed line numbers. Something doesn't match.
+
+---
+
+### Phase 4: Generate Commit Command
+
+**Modified files (with parsed lines):**
+```bash
+git stage-lines 18,25-31,138,326 apps/web/.../EventContent.tsx && \
+  git commit -m "refactor: remove PlaceholderEvent from EventContent"
+```
+
+**New files (no line numbers):**
+```bash
+git stage-lines tests/path/new-test.tsx && \
+  git commit -m "test: add EventContent tests"
+```
+
+**Multiple files (mixed):**
+```bash
+git stage-lines 18,25-31,138,326 apps/web/.../EventContent.tsx && \
+  git stage-lines 50-75,100 src/other-file.tsx && \
+  git stage-lines tests/new-test.tsx && \
+  git commit -m "feat: implement feature per Task N"
+```
+
+---
+
+### Why This Approach Works
+
+✓ **Semantic log** keeps you organized during execution
+✓ **Git diff** provides drift-proof line numbers (handles insertions/deletions)
+✓ **Mandatory verification** catches mismatches before committing
+✓ **Precise staging** prevents conflicts with parallel work
+✓ **No manual tracking** of shifting line numbers
+
+---
+
+**Complete commit step example:**
 
 ```bash
-# Chain stage + commit to minimize race conditions with parallel work
-git stage-lines tests/path/test.py && \
-  git stage-lines 1-20,36 src/path/file.py && \
-  git commit -m "feat: implement feature X per Task N"
+# 1. Parse changed lines from git diff
+git diff --unified=0 apps/web/.../EventContent.tsx | grep "^@@"
+# Hunks show: 18, 25-31, 138, 326
 
-# TIP: Use `git diff src/path/file.py` to see line numbers for your changes
-# TIP: Multi-range syntax (1-20,36) stages only your changes, not others' work
+# 2. VERIFY: Review changes (MANDATORY)
+git diff apps/web/.../EventContent.tsx | head -50
+# Confirm: matches semantic log ✓
+
+# 3. Stage precisely and commit
+git stage-lines 18,25-31,138,326 apps/web/.../EventContent.tsx && \
+  git commit -m "refactor: remove PlaceholderEvent from EventContent"
+```
 ```
 ```
 
