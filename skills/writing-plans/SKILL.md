@@ -61,6 +61,45 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
   - CLI commands (flags and options may have changed)
   - Search for: API signatures, required parameters, authentication flows, configuration schemas
 
+## Step 1: Codebase Architecture Discovery (MANDATORY)
+
+**Before writing tasks, dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore the codebase to understand architecture and locate components for [feature description].
+
+I need you to:
+1. Identify project structure (directory organization, module patterns)
+2. Find similar existing features/implementations to model after
+3. Locate all relevant components: models, controllers, services, tests, configs
+4. Identify testing patterns and locations
+5. Find validation/error handling patterns
+6. Document naming conventions and code organization patterns
+
+Return:
+- Architecture summary (project structure, key directories)
+- Similar implementations (file paths + brief description)
+- Relevant component locations (organized by layer/responsibility)
+- Testing file patterns and locations
+- Naming conventions observed
+
+Thoroughness: very thorough
+"""
+```
+
+**Use findings to:**
+- Generate accurate file paths in task descriptions
+- Model task structure after existing patterns
+- Reference exact locations for tests, configs, validation points
+- Follow codebase naming conventions
+
+**If findings contradict observations:**
+Dispatch 2-3 additional Explore agents in parallel with different search strategies to triangulate truth.
+
 ## Task Structure
 
 ```markdown
