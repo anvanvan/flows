@@ -139,8 +139,9 @@ After saving the plan, use AskUserQuestion to offer execution choices:
 **Handling the user's choice:**
 
 **If "Copy command for new session" selected:**
-- Extract plan filename from saved path
-- Copy to clipboard: `/flows:execute-plan @docs/plans/YYYY-MM-DD-filename.md`
+- Extract actual plan filename from the path where plan was saved
+- Copy to clipboard: `/flows:execute-plan @docs/plans/<actual-filename>.md`
+- Example: If saved to `docs/plans/2025-11-11-auth-system.md`, copy: `/flows:execute-plan @docs/plans/2025-11-11-auth-system.md`
 - Confirm: "Command copied to clipboard! Paste into a new session to begin execution."
 - Skill completes
 
@@ -160,3 +161,4 @@ After saving the plan, use AskUserQuestion to offer execution choices:
 - Update plan document based on discussion
 - Confirm changes made
 - Re-offer execution choices (return to AskUserQuestion)
+- Continue refinement loop until user selects a concrete execution option
