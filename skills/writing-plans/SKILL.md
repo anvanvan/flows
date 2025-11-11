@@ -118,22 +118,45 @@ git stage-lines tests/path/test.py && \
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After saving the plan, use AskUserQuestion to offer execution choices:
 
-**"Plan complete and saved to `docs/plans/<filename>.md`. Two execution options:**
+**Question:** "Plan complete and saved! How would you like to execute it?"
+**Header:** "Execution"
+**multiSelect:** false
+**Options:**
 
-**1. Subagent-Driven (this session, recommended)** - I dispatch fresh subagent per task, review between tasks, fast iteration. Use `/flows:execute-plan`
+1. **"Copy command for new session"** (Recommended)
+   - Description: "Copies `/flows:execute-plan @docs/plans/filename.md` to clipboard for pasting into a fresh session"
 
-**2. Parallel Session (gradual)** - Open new session with `/flows:execute-plan-gradual`, batch execution with manual checkpoints
+2. **"Execute with subagent-driven-development (this session)"**
+   - Description: "Dispatch fresh subagent per task with code review between tasks - fast iteration in current session"
 
-**Which approach?"**
+3. **"Execute in parallel session (gradual)"**
+   - Description: "Open new session, run `/flows:execute-plan-gradual` for batched execution with manual checkpoints"
 
-**If Subagent-Driven chosen:**
+4. Auto-provided "Other" option allows refinement feedback
+
+**Handling the user's choice:**
+
+**If "Copy command for new session" selected:**
+- Extract plan filename from saved path
+- Copy to clipboard: `/flows:execute-plan @docs/plans/YYYY-MM-DD-filename.md`
+- Confirm: "Command copied to clipboard! Paste into a new session to begin execution."
+- Skill completes
+
+**If "Execute with subagent-driven-development (this session)" selected:**
+- Announce: "Using flows:subagent-driven-development to execute the plan"
 - **REQUIRED SUB-SKILL:** Use flows:subagent-driven-development
 - Stay in this session
-- Fresh subagent per task + code review
 
-**If Parallel Session chosen:**
+**If "Execute in parallel session (gradual)" selected:**
 - Guide them to open new session in worktree
 - Tell them to run `/flows:execute-plan-gradual`
 - **REQUIRED SUB-SKILL:** New session uses flows:executing-plans
+
+**If "Other" / refinement feedback provided:**
+- Read user's feedback text
+- Ask clarifying questions (one at a time) about what needs refinement
+- Update plan document based on discussion
+- Confirm changes made
+- Re-offer execution choices (return to AskUserQuestion)
