@@ -176,3 +176,88 @@ Thoroughness: very thorough
 
 **Verification Pattern:**
 If findings from different agents contradict, dispatch 2-3 additional targeted Explore agents with different search strategies to triangulate truth.
+
+### Phase 2: Synthesis & Onboarding Report
+
+**Synthesize all Explore findings into structured onboarding document:**
+
+**Format:**
+````markdown
+# Codebase Onboarding: [Project Name]
+
+## Executive Summary
+[What this codebase does - 2-3 sentences]
+
+## Architecture Overview
+[How it's organized - architectural patterns, structure]
+- Entry Points: [file:line references]
+- Core Patterns: [patterns identified]
+
+## Key Features
+[What it includes - feature inventory with file:line]
+1. Feature A - implemented in file.js:10-50
+2. Feature B - implemented in file.js:60-100
+
+## Data Flow
+[How data moves through the system]
+Input → [file:line] → Transform → [file:line] → Output
+
+## Development Workflow
+[How to work on it]
+- Setup: [exact commands]
+- Run: [exact commands]
+- Test: [exact commands]
+- Build: [exact commands]
+
+## Testing Approach
+[How to verify changes]
+- Framework: [name]
+- Patterns: [examples from actual tests]
+- Helpers: [file:line references]
+
+## Integration Points
+[What it connects to]
+- Service A: [file:line]
+- Database: [file:line]
+- APIs: [file:line]
+
+## Configuration
+[Environment and settings]
+- Config files: [list with file:line]
+- Environment variables: [documented locations]
+
+## Next Steps for [User's Task]
+[Specific guidance based on what user wants to do]
+````
+
+### Phase 3: Focused Deep-Dive (Optional)
+
+**If user needs specific area understanding, dispatch targeted Explore:**
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore [specific feature/module] in detail.
+
+**Methodology:**
+1. Read entry point for [feature]
+2. Follow code paths step-by-step through implementation
+3. Document key logic with file:line references
+4. Extract code snippets for critical sections
+5. Map data flow specific to this feature
+
+**Report with:**
+- Implementation breakdown (numbered sections with line ranges)
+- Code snippets showing key logic
+- Data flow for this specific feature
+- Related files and dependencies
+
+Thoroughness: very thorough
+"""
+```
+
+## Key Principle
+
+**Act as documentarian, not consultant.** Report what exists with precise file:line references, concrete code snippets, and data flow diagrams. Do not suggest improvements unless explicitly requested.
