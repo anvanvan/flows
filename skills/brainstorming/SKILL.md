@@ -64,9 +64,21 @@ Once the user validates the final design section, present next steps using AskUs
 
 **Handling the user's choice:**
 
-- **If "Create detailed implementation plan"**: Use flows:writing-plans skill immediately with the design context
-- **If "Implement with subagent-driven-development"**: Use flows:subagent-driven-development skill to begin implementation
-- **If "Other" (more feedback)**: Return to the design discussion, ask clarifying questions, and update the relevant sections
+**If "Create detailed implementation plan" selected:**
+- Announce: "I'm using the flows:writing-plans skill to create the implementation plan"
+- **REQUIRED SUB-SKILL:** Use flows:writing-plans skill with the design context
+
+**If "Implement with subagent-driven-development" selected:**
+- Announce: "I'm using the flows:subagent-driven-development skill to begin implementation"
+- **REQUIRED SUB-SKILL:** Use flows:subagent-driven-development skill to begin implementation
+
+**If "Other" / more feedback provided:**
+- Read the user's feedback text
+- Ask clarifying questions (one at a time) about what needs refinement
+- Return to the design discussion
+- Update relevant design sections based on discussion
+- Re-present the design section that changed
+- Once validated, re-offer next steps (return to AskUserQuestion)
 
 **Documentation:**
 - Design documents are optional - user can request separately if needed
