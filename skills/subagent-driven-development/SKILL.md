@@ -75,19 +75,134 @@ Task tool (general-purpose):
     4. Commit your work
     5. Report back
 
-    ## Git Workflow for Parallel Safety
+    ## Git Workflow with Semantic Tracking + Precise Staging
 
-    Always chain stage + commit to prevent race conditions with parallel agents:
+    **Two-phase commit process with mandatory verification:**
 
-    **Single file:**
-    git stage-lines new-file.js && git commit -m "feat: task description"
-    git stage-lines 1-20,36 file.js && git commit -m "feat: task description"
+    ### Phase 1: Semantic Change Tracking (as you work)
+
+    Maintain a simple change log as you edit:
+
+    ```
+    Changes to <filename>:
+    1. [Brief description of change] (~line X)
+    2. [Brief description of change] (~lines Y-Z)
+    3. [Brief description of change] (~line W)
+    ```
+
+    **Example:**
+    ```
+    Changes to EventContent.tsx:
+    1. Removed PlaceholderEvent import (~line 18)
+    2. Changed type unions to remove PlaceholderEvent (7 locations)
+    3. Removed setPlaceholderEvent from context (~line 139)
+    4. Removed setPlaceholderEvent(null) call (~line 327)
+    ```
+
+    **Why:** Keeps you organized. Line numbers are approximate hints only.
+
+    ---
+
+    ### Phase 2: Precise Line Extraction (at commit time)
+
+    When ready to commit, extract exact line numbers using git diff:
+
+    **Step 1: Parse git diff for changed lines**
+    ```bash
+    git diff --unified=0 <file> | grep "^@@"
+    ```
+
+    **Step 2: Extract line numbers from hunk headers**
+
+    Hunk format: `@@ -<old> +<new> @@`
+    Extract from `+<new_start>,<new_count>`:
+
+    | Hunk Header | Meaning | Extract |
+    |-------------|---------|---------|
+    | `@@ -18,1 +18,0 @@` | Deleted 1 line at position 18 | `18` |
+    | `@@ -26,7 +25,7 @@` | Changed 7 lines starting at 25 | `25-31` |
+    | `@@ -139,1 +138,1 @@` | Changed 1 line at position 138 | `138` |
+    | `@@ -327,1 +326,0 @@` | Deleted 1 line at position 326 | `326` |
+    | `@@ -50,0 +51,3 @@` | Inserted 3 lines starting at 51 | `51-53` |
+
+    **Parsing rules:**
+    - Single line (`+N,1`): Extract `N`
+    - Range (`+N,C` where C>1): Extract `N-(N+C-1)`
+    - Deletion (`+N,0`): Extract `N`
+
+    **Step 3: Combine into comma-separated format**
+    ```
+    18,25-31,138,326
+    ```
+
+    ---
+
+    ### Phase 3: Verification (MANDATORY)
+
+    **Before staging, ALWAYS verify changes match your semantic log:**
+
+    ```bash
+    # REQUIRED: Review human-readable diff
+    git diff <file> | head -50
+    ```
+
+    **Verify each item from your semantic log is visible in the diff.**
+
+    **If verification fails:** Re-examine your semantic log and parsed line numbers. Something doesn't match - investigate before proceeding.
+
+    ---
+
+    ### Phase 4: Commit Command Examples
+
+    **New file:**
+    ```bash
+    git stage-lines new-file.tsx && git commit -m "feat: add new component"
+    ```
+
+    **Modified file with parsed lines:**
+    ```bash
+    # After verification passes
+    git stage-lines 18,25-31,138,326 EventContent.tsx && \
+      git commit -m "refactor: remove PlaceholderEvent from EventContent"
+    ```
 
     **Multiple files:**
-    git stage-lines 1-20,36 file.js && git stage-lines new-test.js && git commit -m "feat: ..."
+    ```bash
+    # After verifying all files
+    git stage-lines 18,25-31 file1.tsx && \
+      git stage-lines 50-75,100 file2.tsx && \
+      git stage-lines new-test.tsx && \
+      git commit -m "feat: implement feature per Task N"
+    ```
 
-    **Why line ranges:** Prevents staging unrelated changes from other parallel work.
-    Check line numbers: `git diff file.js`
+    ---
+
+    ### Complete Workflow Example
+
+    ```bash
+    # 1. Parse changed lines
+    git diff --unified=0 EventContent.tsx | grep "^@@"
+    # Shows hunks: @@ -18,1 +18,0 @@, @@ -26,7 +25,7 @@, etc.
+    # Extract: 18,25-31,138,326
+
+    # 2. VERIFY (MANDATORY)
+    git diff EventContent.tsx | head -50
+    # Confirm all 4 semantic changes visible ✓
+
+    # 3. Stage and commit
+    git stage-lines 18,25-31,138,326 EventContent.tsx && \
+      git commit -m "refactor: remove PlaceholderEvent from EventContent"
+    ```
+
+    ---
+
+    ### Why This Works
+
+    ✓ **Semantic log** keeps you organized during execution
+    ✓ **Git diff** provides drift-proof line numbers (handles insertions/deletions)
+    ✓ **Mandatory verification** catches mismatches before committing
+    ✓ **Precise staging** prevents conflicts with parallel work
+    ✓ **No manual tracking** of shifting line numbers
 
     Work from: [directory]
 
