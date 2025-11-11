@@ -29,6 +29,19 @@ Execute plan by dispatching fresh subagent per task, with code review after each
 
 ## The Process
 
+### Manual Testing Detection
+
+Before executing each task, the skill checks for manual testing keywords in the task description:
+
+**Keywords:** "manually test", "manual testing", "verify in browser", "test manually", "user testing", "manual verification", "check manually", "test in production", "verify with user", "manual check"
+
+**When detected:**
+- Pause execution
+- Present testing options to user (manual vs. automated)
+- Collect feedback and resolve issues before continuing
+
+**Applies to:** Only tasks explicitly marked with manual testing keywords (not all testing tasks)
+
 ### 1. Load Plan
 
 Read plan file, create TodoWrite with all tasks.
@@ -37,7 +50,18 @@ Read plan file, create TodoWrite with all tasks.
 
 For each task:
 
-**Dispatch fresh subagent:**
+**Check for manual testing:**
+
+If task description contains manual testing keywords:
+1. Mark task as in_progress
+2. Present task description
+3. Ask user: "How should we test this?" (AskUserQuestion)
+   - Option A: "I'll test it manually"
+   - Option B: "Use browser automation"
+4. Follow manual testing workflow (see Step 2a below)
+5. After issues resolved, mark complete and continue to next task
+
+**Otherwise, dispatch fresh subagent:**
 ```
 Task tool (general-purpose):
   description: "Implement Task N: [task name]"
@@ -71,6 +95,120 @@ Task tool (general-purpose):
 ```
 
 **Subagent reports back** with summary of work.
+
+### 2a. Manual Testing Workflow
+
+**When manual testing task detected:**
+
+**Step 1: Collect Feedback**
+
+Based on user's choice:
+
+**Manual Testing Path:**
+- Say: "Please test and describe what worked and what didn't."
+- Wait for user's conversational feedback
+
+**Automated Testing Path:**
+- Dispatch testing subagent:
+  ```
+  Task tool (general-purpose):
+    description: "Automated testing for Task N"
+    prompt: |
+      You are performing automated browser testing for Task N from [plan].
+
+      Use the superpowers-chrome:browsing skill to:
+      1. Navigate to the feature
+      2. Perform the test steps described in the task
+      3. Test across viewports if UI-related (desktop/mobile)
+      4. Document what worked and what issues you found
+
+      Task description: [task text]
+
+      Report back with conversational feedback like a human tester would.
+  ```
+- Collect feedback from testing subagent
+
+**Step 2: Parse Feedback**
+
+Analyze feedback to extract:
+- Overall status (pass vs. issues found)
+- Discrete issues with descriptions
+- Severity from language cues
+
+If no issues: Mark task complete, continue to next task.
+
+**Step 3: Investigate Root Causes (Parallel)**
+
+If issues found:
+1. List extracted issues clearly
+2. Dispatch one investigation subagent per issue in parallel:
+   ```
+   Task tool (general-purpose):
+     description: "Investigate Issue N: [issue description]"
+     prompt: |
+       Investigate this issue from manual testing:
+
+       Issue: [issue description]
+       Context: [task description]
+       User feedback: [relevant excerpt]
+
+       Your job:
+       1. Find the root cause
+       2. Propose 2-3 solution approaches with trade-offs
+       3. Return findings
+
+       Report format:
+       Root Cause: [what's causing this]
+       Solution A: [approach] - [trade-offs]
+       Solution B: [approach] - [trade-offs]
+       Solution C: [approach] - [trade-offs]
+   ```
+
+**Step 4: Present Solutions**
+
+For each issue, use AskUserQuestion:
+- Question: "How should we fix [Issue N: description]?"
+- Header: "Issue N fix"
+- multiSelect: false
+- Options: 2-3 solution approaches from investigation subagent
+
+**Step 5: Implement Fixes**
+
+After all solutions chosen:
+1. Determine if fixes are independent or dependent
+2. Dispatch fix subagents:
+   - If independent: dispatch in parallel
+   - If dependent: dispatch sequentially
+   ```
+   Task tool (general-purpose):
+     description: "Fix Issue N: [issue description]"
+     prompt: |
+       Fix this issue from manual testing:
+
+       Issue: [issue description]
+       Chosen solution: [selected approach]
+       Root cause: [from investigation]
+
+       Implement the fix, test it, and commit your work.
+   ```
+
+**Step 6: Review Fixes**
+
+Dispatch code-reviewer for all fixes (same as Step 3)
+
+**Step 7: Handle Review Feedback**
+
+If Critical/Important issues in review:
+- Dispatch fix subagent to address
+- Re-run code review
+- Only mark complete when review passes
+
+**Error Handling:**
+
+- If fix subagent fails: Report to user, re-investigate, present new solutions
+- If feedback ambiguous: Show interpretation, ask user to confirm/clarify
+- If user wants to skip: Mark task as "deferred", continue, remind at final review
+- Multiple rounds: After fixes, ask "Ready for another round of testing?" (max 3 rounds)
 
 ### 3. Review Subagent's Work
 
@@ -159,6 +297,99 @@ Final reviewer: All requirements met, ready to merge
 Done!
 ```
 
+### Example with Manual Testing (Manual Path)
+
+```
+Task 3: Manually test the login flow in browser
+
+Skill: This is a manual testing task: "Manually test the login flow in browser"
+       How should we test this?
+       A) I'll test it manually
+       B) Use browser automation
+
+User: A) I'll test it manually
+
+Skill: Please test and describe what worked and what didn't.
+
+User: Tried it out. Login works but the error message for wrong password
+      is cut off on mobile and the redirect after login is slow.
+
+Skill: I found these issues:
+       1. Error message cut off on mobile
+       2. Slow redirect after login
+
+       Investigating root causes... [dispatches 2 parallel subagents]
+
+Investigation subagent 1:
+  Root Cause: Error message uses fixed width (320px), overflows on small viewports
+  Solution A: Add text wrapping (quick, may look cramped)
+  Solution B: Shorten message text (requires copy changes)
+  Solution C: Use responsive width with max-width (best UX, standard approach)
+
+Investigation subagent 2:
+  Root Cause: Redirect waits for full session sync (500ms average)
+  Solution A: Optimistic redirect, sync in background (faster UX, standard pattern)
+  Solution B: Parallel sync operations (complex, minimal gain)
+  Solution C: Lazy sync non-critical data (requires refactor)
+
+Skill: How should we fix Issue 1: Error message cut off on mobile?
+       A) Add text wrapping
+       B) Shorten message text
+       C) Use responsive width with max-width
+
+User: C
+
+Skill: How should we fix Issue 2: Slow redirect after login?
+       A) Optimistic redirect, sync in background
+       B) Parallel sync operations
+       C) Lazy sync non-critical data
+
+User: A
+
+Skill: Implementing fixes... [dispatches 2 parallel fix subagents]
+
+Fix subagent 1: Changed error container to use responsive width with max-width
+Fix subagent 2: Implemented optimistic redirect with background session sync
+
+Skill: [Runs code review on fixes]
+Reviewer: Both fixes look good. Issue 1 follows responsive design patterns.
+          Issue 2 properly handles sync errors. No issues found.
+
+Skill: Task 3 completed. Moving to Task 4...
+```
+
+### Example with Manual Testing (Automated Path)
+
+```
+Task 5: Manually verify the checkout flow works end-to-end
+
+Skill: This is a manual testing task: "Manually verify the checkout flow"
+       How should we test this?
+       A) I'll test it manually
+       B) Use browser automation
+
+User: B) Use browser automation
+
+Skill: Testing with browser automation... [dispatches testing subagent]
+
+Testing subagent:
+  Used superpowers-chrome:browsing to test checkout flow.
+
+  Tested: Add to cart → proceed to checkout → fill shipping → payment → confirm
+
+  Issues found:
+  1. Shipping form submit button disabled when all fields valid (desktop Chrome)
+  2. Payment section shows "Loading..." indefinitely after selecting saved card
+
+Skill: I found these issues:
+       1. Shipping form submit button disabled incorrectly
+       2. Payment section stuck on "Loading..." with saved cards
+
+       Investigating root causes... [dispatches 2 parallel subagents]
+
+[Investigation and fix workflow continues as in manual path example...]
+```
+
 ## Advantages
 
 **vs. Manual execution:**
@@ -182,10 +413,19 @@ Done!
 - Proceed with unfixed Critical issues
 - Dispatch multiple implementation subagents in parallel (conflicts)
 - Implement without reading plan task
+- Skip manual testing tasks without user permission
+- Implement fixes without investigating root cause first
+- Present solutions without giving user choice
 
 **If subagent fails task:**
 - Dispatch fix subagent with specific instructions
 - Don't try to fix manually (context pollution)
+
+**For manual testing:**
+- Always ask user whether to test manually or use automation
+- Always investigate root cause before proposing fixes
+- Always present solution options via AskUserQuestion
+- Don't guess at solutions - let investigation subagents analyze first
 
 ## Integration
 
@@ -196,6 +436,9 @@ Done!
 
 **Subagents must use:**
 - **test-driven-development** - Subagents follow TDD for each task
+
+**Optional for manual testing:**
+- **superpowers-chrome:browsing** - For automated browser testing option
 
 **Alternative workflow:**
 - **executing-plans** - Use for parallel session instead of same-session execution
