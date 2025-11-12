@@ -21,6 +21,47 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 3. If concerns: Raise them with your human partner before starting
 4. If no concerns: Create TodoWrite and proceed
 
+### Pre-Execution: Plan Context Loading (MANDATORY)
+
+**After loading plan, before starting batch 1, dispatch Explore** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore codebase to verify plan context for [feature from plan]:
+1. Verify all file paths mentioned in plan exist and are current
+2. Find any codebase changes since plan was written that affect tasks
+3. Locate additional context not in plan (recent refactors, new patterns)
+4. Identify any risks or conflicts with current codebase state
+5. Find updated dependencies, configurations, or requirements
+
+Return:
+- Plan accuracy assessment (paths valid, assumptions current)
+- Codebase changes affecting plan
+- Additional context needed
+- Risks or conflicts identified
+- Updated requirements
+
+Thoroughness: very thorough
+"""
+```
+
+**If discrepancies found:**
+Report to user:
+"Plan is from [date]. Codebase changes detected:
+- [Changes affecting plan]
+- [Risks identified]
+
+Options:
+1. Update plan to reflect current codebase
+2. Proceed with plan and adapt as needed
+3. Cancel execution for plan revision"
+
+**Per-batch targeted Explore (optional):**
+Before each batch, can dispatch focused Explore for batch-specific context.
+
 ### Step 2: Execute Batch
 **Default: First 3 tasks**
 
