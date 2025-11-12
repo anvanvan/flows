@@ -67,9 +67,28 @@ Return:
 - Naming and organization conventions
 - Setup/teardown patterns
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Test Pattern Discovery Results:**
+
+After Task tool returns, test pattern report appears in function_results.
+
+**Read and extract:**
+- Example test files to model after → Use for test structure
+- Testing tools and patterns in use → Match framework and helpers
+- Available test helpers/fixtures → Leverage existing utilities
+- Naming and organization conventions → Follow naming patterns
+- Setup/teardown patterns → Apply to new tests
+
+**Consumption pattern:** Narrative (Pattern 1) - read patterns and apply as constraints to test writing.
+
+**These findings become mandatory constraints** for the test you write in RED phase.
 
 **Write test matching discovered patterns:**
 - Use same test framework structure
