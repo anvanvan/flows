@@ -46,6 +46,42 @@ Before executing each task, the skill checks for manual testing keywords in the 
 
 Read plan file, create TodoWrite with all tasks.
 
+## Pre-Execution: Task Context Discovery (MANDATORY)
+
+**Before dispatching first task agent, run Explore** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore codebase to gather context for [feature implementation]:
+1. Find all relevant existing code (similar features, utilities, patterns)
+2. Locate test files and testing patterns to follow
+3. Identify configuration, dependencies, or setup required
+4. Find any constraints, anti-patterns, or deprecations to avoid
+5. Map component relationships and integration points
+
+Return:
+- Existing code to reference (file paths + descriptions)
+- Testing patterns and locations
+- Configuration/setup requirements
+- Constraints and patterns to follow
+- Component relationship map
+
+Thoroughness: very thorough
+"""
+```
+
+**Share findings with all task agents:**
+Each task agent receives:
+- Relevant Explore findings for their task
+- References to existing patterns to follow
+- Testing expectations based on discovered patterns
+
+**Per-task targeted Explore (optional):**
+If a task agent needs additional context, can dispatch targeted Explore with thoroughness: medium
+
 ### 2. Execute Task with Subagent
 
 For each task:
