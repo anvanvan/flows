@@ -27,6 +27,41 @@ Start by understanding the current project context, then ask questions one at a 
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
+**Before Proposing Approaches: Pattern Discovery**
+
+**If designing NEW features, dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore the codebase to find existing patterns relevant to [feature description].
+
+I need you to:
+1. Find similar features already implemented
+2. Identify architectural patterns in use (MVC, layered, microservices, etc.)
+3. Locate reusable components or utilities that could be leveraged
+4. Find testing patterns and frameworks in use
+5. Identify any anti-patterns or deprecated approaches to avoid
+
+Return:
+- Existing similar implementations (file paths + how they work)
+- Architectural patterns observed (with examples)
+- Reusable components found (file paths + purpose)
+- Testing approaches in use (frameworks, patterns, coverage)
+- Any patterns to avoid (with reasoning)
+
+Thoroughness: very thorough
+"""
+```
+
+**Use findings to:**
+- Propose approaches that fit existing architecture
+- Leverage existing components rather than reinventing
+- Suggest testing strategies that match current patterns
+- Avoid recommending patterns that contradict codebase conventions
+
 **Exploring approaches:**
 - **CONSIDER WEB-RESEARCHER BEFORE PROPOSING** if approaches involve:
   - Libraries/tools released after training cutoff
