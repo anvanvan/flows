@@ -44,9 +44,26 @@ Return:
 - Risks or conflicts identified
 - Updated requirements
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Plan Validation Results:**
+
+After Task tool returns, validation report appears in function_results.
+
+**Read and extract:**
+- Plan accuracy assessment (paths valid, assumptions current)
+- Codebase changes affecting plan
+- Additional context needed
+- Risks or conflicts identified
+- Updated requirements
+
+**Use for:** Deciding whether plan needs updates. If discrepancies found, report to user with options (update plan, proceed with adaptation, cancel for revision).
 
 **If discrepancies found:**
 Report to user:

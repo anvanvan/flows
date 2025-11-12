@@ -120,9 +120,25 @@ Return:
 - Test running commands
 - Key entry points and documentation
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Structure Discovery Results:**
+
+After Task tool returns, worktree structure report appears in function_results.
+
+**Read and extract:**
+- Project structure overview
+- Setup requirements (dependencies, environment)
+- Test running commands
+- Key entry points and documentation
+
+**Use for:** Providing to user so they understand the worktree structure and know how to begin work.
 
 **Provide to user:**
 "Worktree created at [path]. Here's the structure:

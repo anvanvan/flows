@@ -59,9 +59,26 @@ Return:
 - Documentation gaps
 - Test modifications to address
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Cleanup Detection Results:**
+
+After Task tool returns, cleanup report appears in function_results.
+
+**Read and extract:**
+- TODOs, FIXMEs, temporary code
+- Debug logging or console statements
+- Commented-out code or experimental changes
+- test.skip, test.only, temporary test modifications
+- Documentation that needs updating
+
+**Use for:** Creating cleanup checklist. If any items found, present to user before offering merge/PR options.
 
 **If cleanup found:**
 Present cleanup checklist before offering merge/PR options:

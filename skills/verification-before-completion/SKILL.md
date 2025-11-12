@@ -36,9 +36,26 @@ Return:
 - Pre-commit checks
 - Coverage/quality thresholds
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: medium
 """
 ```
+
+**Consuming Verification Command Discovery Results:**
+
+After Task tool returns, command report appears in function_results.
+
+**Read and extract:**
+- Test commands to run
+- Linting/formatting commands
+- Build/compile commands
+- Pre-commit checks
+- Coverage/quality thresholds
+
+**Use for:** Running all discovered verification commands. Only claim completion if all pass.
 
 **Run all discovered verification commands:**
 Evidence collected from actual command output.

@@ -34,9 +34,26 @@ Return:
 
 Compare against actual changes made.
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Completeness Verification Results:**
+
+After Task tool returns, completeness report appears in function_results.
+
+**Read and extract:**
+- Expected file modifications (based on patterns)
+- Test coverage expectations
+- Documentation update requirements
+- Configuration/migration needs
+- Integration points to verify
+
+**Use for:** Passing to code-reviewer agent so it can verify all expected files were modified, check for missing tests, identify missing documentation updates, flag incomplete integration coverage.
 
 **Pass findings to code-reviewer agent:**
 Include Explore report in review context so code-reviewer can:

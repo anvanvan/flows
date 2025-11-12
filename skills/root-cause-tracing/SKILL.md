@@ -56,9 +56,25 @@ Return:
 - All intermediate transformations
 - Configuration/setup that affects behavior
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Call Chain Discovery Results:**
+
+After Task tool returns, call chain map appears in function_results.
+
+**Read and extract:**
+- Call chain map (from entry points to error location)
+- Data origin points (where values are first set/created)
+- All intermediate transformations
+- Configuration/setup that affects behavior
+
+**Use for:** Knowing exact tracing path before instrumenting. Instrument all relevant points in single pass.
 
 **Use findings to:**
 - Know exact tracing path before instrumenting
