@@ -44,6 +44,39 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
 
 The entire skill creation process follows RED-GREEN-REFACTOR.
 
+## Skill Context Discovery (Before Writing)
+
+**Before writing new skill, dispatch Explore** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+# Invoke Task tool with:
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore existing skills to understand landscape for [proposed skill topic]:
+1. Find existing skills that cover similar territory
+2. Identify gaps or overlaps with proposed skill
+3. Locate skills that would reference this new skill
+4. Find skills this new skill would reference
+5. Understand skill patterns and conventions in use
+
+Return:
+- Related existing skills (file paths + overlap analysis)
+- Gap analysis (what's missing that new skill would fill)
+- Integration points (which skills would interact)
+- Naming and structure conventions to follow
+
+Thoroughness: very thorough
+"""
+```
+
+**Use findings to:**
+- Avoid duplicating existing skills
+- Fill actual gaps in skill coverage
+- Design skill to integrate well with existing skills
+- Follow established skill conventions
+
 ## When to Create a Skill
 
 **Create when:**

@@ -22,6 +22,73 @@ Different layers catch different cases:
 - Environment guards prevent context-specific dangers
 - Debug logging helps when other layers fail
 
+## Layer Implementation: Validation Point Discovery
+
+**For each layer, dispatch Explore agent** with thoroughness: "very thorough"
+
+**Layer 1 - Entry Point Discovery:**
+
+Use Task tool:
+```python
+# Invoke Task tool with:
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to find all entry points for [feature/module]:
+1. API endpoints, route handlers, CLI commands
+2. Event handlers, message queue consumers
+3. Public class methods, exported functions
+4. Form inputs, user interactions
+
+Return: All entry points with file paths and signatures
+
+Thoroughness: very thorough
+"""
+```
+
+**Layer 2 - Business Logic Discovery:**
+
+```python
+# Invoke Task tool with:
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to find business logic validation points:
+1. Service methods, domain logic functions
+2. State transition validations
+3. Business rule enforcement locations
+4. Data consistency checks
+
+Return: Business logic locations requiring validation
+
+Thoroughness: very thorough
+"""
+```
+
+**Layer 3 - Environment Discovery:**
+
+```python
+# Invoke Task tool with:
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to find environment interaction points:
+1. Database queries, ORM operations
+2. External API calls, HTTP clients
+3. File system operations
+4. Cache access, session management
+
+Return: All boundary points with external systems
+
+Thoroughness: very thorough
+"""
+```
+
+**Use findings to:**
+- Implement validation at EVERY identified point
+- Ensure no gaps in validation coverage
+- Add instrumentation for debugging at key boundaries
+
 ## The Four Layers
 
 ### Layer 1: Entry Point Validation
