@@ -9,6 +9,42 @@ Dispatch flows:code-reviewer subagent to catch issues before they cascade.
 
 **Core principle:** Review early, review often.
 
+## Pre-Review: Completeness Verification
+
+**Before requesting code-reviewer, dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to verify implementation completeness for [feature]:
+1. Find all files that should be modified for this feature (based on similar features)
+2. Locate test files that should cover this implementation
+3. Identify documentation that should be updated
+4. Find configuration or migration files that might need changes
+5. Locate any integration points or dependent code
+
+Return:
+- Expected file modifications (based on patterns)
+- Test coverage expectations
+- Documentation update requirements
+- Configuration/migration needs
+- Integration points to verify
+
+Compare against actual changes made.
+
+Thoroughness: very thorough
+"""
+```
+
+**Pass findings to code-reviewer agent:**
+Include Explore report in review context so code-reviewer can:
+- Verify all expected files were modified
+- Check for missing tests
+- Identify missing documentation updates
+- Flag incomplete integration coverage
+
 ## When to Request Review
 
 **Mandatory:**
