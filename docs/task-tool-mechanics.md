@@ -182,3 +182,164 @@ After code review returns, search for keywords:
 - No rigid parsing - semantic understanding
 
 **When to use:** When results require interpretation and judgment
+
+## End-to-End Consumption Examples
+
+### Example 1: Codebase Research (Narrative Consumption)
+
+**Step 1: Dispatch 5 parallel Explore agents**
+
+```
+Invoke Task tool 5 times in parallel:
+- Agent 1: Architecture & entry points
+- Agent 2: Core implementation & data flow
+- Agent 3: Testing infrastructure
+- Agent 4: Dev workflow & configuration
+- Agent 5: Integration points & dependencies
+```
+
+**Step 2: Receive results in 5 function_results blocks**
+
+Each function_results contains agent's complete report.
+
+**Step 3: Synthesize findings into onboarding document**
+
+Read each function_results and populate sections:
+```
+## Architecture Overview
+[Use Agent 1 findings]
+- Entry Points: file:line from Agent 1
+
+## Key Features
+[Use Agent 2 findings]
+- Feature A: file:line from Agent 2
+
+## Testing Approach
+[Use Agent 3 findings]
+- Framework: from Agent 3
+- Patterns: examples from Agent 3
+
+## Development Workflow
+[Use Agent 4 findings]
+- Commands from Agent 4
+
+## Integration Points
+[Use Agent 5 findings]
+- Services: file:line from Agent 5
+```
+
+**Key insight:** Every section populated directly from function_results. No file reading required.
+
+---
+
+### Example 2: Implementation Task (Structured Parsing)
+
+**Step 1: Dispatch task agent with strict format requirements**
+
+Prompt includes:
+```
+**REQUIRED:** Return report in this EXACT format:
+
+## Commits Created
+- <sha> (<message>)
+
+## Files Modified
+- <path> (<status>)
+
+## Implementation Summary
+[...]
+
+## Testing
+[...]
+
+## Next Steps
+[...]
+```
+
+**Step 2: Receive report in function_results**
+
+Report appears as text in function_results block.
+
+**Step 3: Parse specific sections**
+
+```
+commits_section = extract_section("Commits Created", function_results)
+commits = []
+for line in commits_section.lines:
+    if line.startswith("- "):
+        sha = extract_sha(line)  # Regex: [a-f0-9]{7,8}|[a-f0-9]{40}
+        if sha matches pattern:
+            commits.append(sha)
+
+files_section = extract_section("Files Modified", function_results)
+files = []
+for line in files_section.lines:
+    if line.startswith("- "):
+        path = line.split("(")[0].strip()  # Split on first "("
+        files.append(path)
+```
+
+**Step 4: Validate extracted data**
+
+```
+if not commits:
+    error = "Report missing 'Commits Created' section"
+    ask_subagent_to_reformat(error)
+    retry_parsing()
+
+if not files:
+    error = "Report missing 'Files Modified' section"
+    ask_subagent_to_reformat(error)
+    retry_parsing()
+```
+
+**Step 5: Use validated data**
+
+```
+Present to user:
+"Task complete. Created commits:
+- commits[0]
+- commits[1]
+
+Modified files:
+- files[0]
+- files[1]"
+```
+
+---
+
+### Example 3: Code Review (Semantic Analysis)
+
+**Step 1: Dispatch code-reviewer with context**
+
+Pass plan and current implementation to code-reviewer agent.
+
+**Step 2: Receive review in function_results**
+
+Review appears as structured narrative with sections.
+
+**Step 3: Read for semantic meaning**
+
+```
+Look for "Safety Check Results" section in function_results
+
+If section contains "concurrent modification":
+    Stop execution
+    Report: "Code review detected concurrent changes. Please resolve conflicts."
+
+If section contains "Critical:" or "CRITICAL:":
+    Extract critical issues list
+    Report to user: "Must fix before proceeding: [issues]"
+    Wait for fixes
+
+If section contains "✓" or "No issues found":
+    Report: "Code review passed. Proceeding..."
+    Continue to next task
+
+If section contains "Missing tests":
+    Add task: "Write tests per code review feedback"
+```
+
+**Step 4: Make workflow decisions based on content**
+
+No rigid parsing - read and interpret like a human would.
