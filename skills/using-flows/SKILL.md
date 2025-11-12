@@ -48,6 +48,28 @@ If you catch yourself thinking ANY of these thoughts, STOP. You are rationalizin
 
 If a skill for your task exists, you must use it or you will fail at your task.
 
+## Discovering Codebase Research Skills
+
+**NEW: When user mentions unfamiliar code or asks "how does X work?":**
+
+Check if these skills apply:
+- **codebase-research** - For understanding unfamiliar codebases comprehensively
+- **pattern-discovery** - For finding existing patterns before implementing features
+
+**Trigger detection patterns:**
+
+If user says:
+- "I don't know this codebase" → Recommend codebase-research
+- "How does authentication work here?" → Recommend codebase-research
+- "What's the pattern for API endpoints?" → Recommend pattern-discovery
+- "I want to implement X like the others" → Recommend pattern-discovery
+- "Show me examples of Y" → Recommend pattern-discovery
+- "Where do I start?" → Recommend codebase-research
+
+**Proactive recommendation:**
+When a skill like brainstorming, writing-plans, or systematic-debugging would benefit from codebase context, proactively suggest:
+"Before proceeding, would you like me to use codebase-research to understand the existing codebase structure?"
+
 ## When to Invoke Web-Researcher Agent
 
 **INVOKE WEB-RESEARCHER when you need:**
