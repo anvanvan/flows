@@ -13,6 +13,38 @@ Claiming work is complete without verification is dishonesty, not efficiency.
 
 **Violating the letter of this rule is violating the spirit of this rule.**
 
+## Verification Command Discovery
+
+**Before claiming completion, dispatch Explore** with thoroughness: "medium"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to find verification commands for this project:
+1. Locate test running commands (package.json scripts, Makefile, etc.)
+2. Find linter/formatter commands
+3. Identify build/compile commands
+4. Locate any pre-commit hooks or CI checks
+5. Find coverage requirements or quality gates
+
+Return:
+- Test commands to run
+- Linting/formatting commands
+- Build/compile commands
+- Pre-commit checks
+- Coverage/quality thresholds
+
+Thoroughness: medium
+"""
+```
+
+**Run all discovered verification commands:**
+Evidence collected from actual command output.
+
+**Only claim completion if all pass.**
+
 ## The Iron Law
 
 ```
