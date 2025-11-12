@@ -87,15 +87,39 @@ Return:
 - Testing file patterns and locations
 - Naming conventions observed
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
 
+**Consuming Explore Results:**
+
+After Task tool returns, architecture discovery report appears in function_results.
+
+**Read and extract:**
+- **Architecture summary** → Understand project structure and key directories
+- **Similar implementations** → Get file paths + descriptions of similar features
+- **Relevant component locations** → Note exact paths for models, controllers, services, tests, configs
+- **Testing file patterns** → Identify where tests should be located
+- **Naming conventions** → Learn how files and functions are named
+
+**Consumption pattern:** Narrative (Pattern 1) - read report directly, reference specific file:line mentions.
+
 **Use findings to:**
 - Generate accurate file paths in task descriptions
+  - Read "Relevant component locations" from function_results
+  - Use exact paths in task File: sections
 - Model task structure after existing patterns
+  - Read "Similar implementations" from function_results
+  - Structure tasks matching discovered patterns
 - Reference exact locations for tests, configs, validation points
+  - Use "Testing file patterns" for test location paths
+  - Use "Architecture summary" for config locations
 - Follow codebase naming conventions
+  - Apply "Naming conventions" from function_results to new files
 
 **If findings contradict observations:**
 Dispatch 2-3 additional Explore agents in parallel with different search strategies to triangulate truth.
