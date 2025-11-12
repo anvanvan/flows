@@ -98,6 +98,38 @@ git worktree add "$path" -b "$BRANCH_NAME"
 cd "$path"
 ```
 
+## Post-Worktree: Structure Discovery
+
+**After creating worktree, dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore the worktree structure at [worktree-path]:
+1. Identify project structure and key directories
+2. Locate build configuration, dependencies, environment setup
+3. Find test setup and running instructions
+4. Identify any workspace-specific configuration
+5. Locate documentation for getting started
+
+Return:
+- Project structure overview
+- Setup requirements (dependencies, environment)
+- Test running commands
+- Key entry points and documentation
+
+Thoroughness: very thorough
+"""
+```
+
+**Provide to user:**
+"Worktree created at [path]. Here's the structure:
+[Explore findings]
+
+Ready to work on [feature]."
+
 ### 3. Run Project Setup
 
 Auto-detect and run appropriate setup:
