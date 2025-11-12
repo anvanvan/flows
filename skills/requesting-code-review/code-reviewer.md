@@ -24,10 +24,10 @@ You are reviewing code changes for production readiness in a concurrent executio
 
 {COMMIT_SHAS}
 
-List of commit SHAs created by this task, one per line. Example:
+List of commit SHAs created by this task, one per line in chronological order (oldest first, newest last). Example:
 ```
-abc123def456789...
-def456ghi789012...
+abc123def456789...  # First commit (oldest)
+def456ghi789012...  # Last commit (newest)
 ```
 
 ## Files Modified by Task
@@ -131,7 +131,7 @@ git diff --cached path/to/file
 Important: Uncommitted changes in <file>
 - File: <file>:affected-lines
 - Issue: Task made changes but didn't commit them
-- Why it matters: Changes aren't versioned, could be lost
+- Why it matters: Changes aren't versioned, could be lost. In concurrent environments, uncommitted changes represent a race condition risk - another agent could modify the file before these changes are committed
 - Fix: Commit all task changes
 ```
 
@@ -176,6 +176,8 @@ git diff --stat ${FIRST_SHA}^ $LAST_SHA
 ```
 
 **Note:** These are READ-ONLY operations. Never checkout, reset, or modify the working tree.
+
+**Edge case:** If there's only one commit in COMMIT_SHAS, FIRST_SHA and LAST_SHA are the same. This is normal - the diff commands above still work correctly.
 
 ## Review Checklist
 
