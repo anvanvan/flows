@@ -46,6 +46,23 @@ Before executing each task, the skill checks for manual testing keywords in the 
 
 Read plan file, create TodoWrite with all tasks.
 
+## Understanding Task Tool Result Consumption
+
+**IMPORTANT:** This skill uses Pattern 2 (Structured Parsing) from `/docs/task-tool-mechanics.md`.
+
+**What this means:**
+- Task agents return structured 5-section reports
+- We parse specific sections using text extraction and regex
+- We validate extracted data (commit SHAs, file paths)
+- We re-prompt agents if validation fails
+
+**Why explicit parsing?**
+- We need commit SHAs for git operations
+- We need file paths for change tracking
+- We need structured data for automation, not just narrative
+
+**See:** Lines 306-393 below for complete parsing implementation.
+
 ## Pre-Execution: Task Context Discovery (MANDATORY)
 
 **Before dispatching first task agent, run Explore** with thoroughness: "very thorough"
@@ -69,9 +86,31 @@ Return:
 - Constraints and patterns to follow
 - Component relationship map
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Context Discovery Results:**
+
+After Task tool returns, context report appears in function_results.
+
+**Read and extract:**
+- **Existing code to reference** → Use for sharing with task agents
+- **Testing patterns and locations** → Include in task agent context
+- **Configuration/setup requirements** → Share with relevant task agents
+- **Constraints and patterns to follow** → Include in all task agent prompts
+- **Component relationship map** → Use to understand dependencies
+
+**Consumption pattern:** Narrative (Pattern 1) - read and share relevant sections with each task agent.
+
+**Sharing mechanism:**
+- Relevant Explore findings included in each task agent prompt
+- References to existing patterns to follow
+- Testing expectations based on discovered patterns
 
 **Share findings with all task agents:**
 Each task agent receives:
@@ -302,6 +341,23 @@ If Critical/Important issues in review:
 - Multiple rounds: After fixes, ask "Ready for another round of testing?" (max 3 rounds)
 
 ### 3. Review Subagent's Work
+
+---
+
+## Task Agent Result Parsing (Pattern 2: Structured Parsing)
+
+**This section implements structured parsing** as documented in `/docs/task-tool-mechanics.md`.
+
+**Process:**
+1. Task agent returns 5-section report in function_results
+2. Extract and parse each section
+3. Validate extracted data
+4. Re-prompt if validation fails
+5. Use validated data for git operations and reporting
+
+**Below:** Complete parsing implementation.
+
+---
 
 **Parse subagent report:**
 
