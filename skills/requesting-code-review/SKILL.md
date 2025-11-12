@@ -59,25 +59,57 @@ Include Explore report in review context so code-reviewer can:
 
 ## How to Request
 
-**1. Get git SHAs:**
+**1. Identify commits to review:**
+
+If you're a task subagent, you already know your commit SHAs:
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
-HEAD_SHA=$(git rev-parse HEAD)
+# Get your last N commits
+git log --oneline -n 3
+# Example output:
+# a1b2c3d feat: add feature X
+# f6e5d4c test: add tests for X
+# 9e8d7c6 docs: update README
 ```
 
-**2. Dispatch code-reviewer subagent:**
+If you're manually requesting review:
+```bash
+# Review specific commits
+COMMIT_SHAS="abc123
+def456
+ghi789"
+
+# Or review all commits since a base
+BASE_REF=origin/main  # or a specific SHA
+git log --oneline $BASE_REF..HEAD
+# Copy the SHAs you want reviewed
+```
+
+**2. Identify files modified:**
+
+```bash
+# List files changed in your commits
+FIRST_SHA=<oldest commit to review>
+LAST_SHA=<newest commit to review>
+git diff --name-only ${FIRST_SHA}^ $LAST_SHA
+
+# Example output:
+# src/auth/login.js
+# tests/auth.test.js
+```
+
+**3. Dispatch code-reviewer subagent:**
 
 Use Task tool with flows:code-reviewer type, fill template at `code-reviewer.md`
 
 **Placeholders:**
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built
 - `{PLAN_OR_REQUIREMENTS}` - What it should do
-- `{BASE_SHA}` - Starting commit
-- `{HEAD_SHA}` - Ending commit
+- `{COMMIT_SHAS}` - List of commit SHAs to review (one per line)
+- `{FILES_MODIFIED}` - List of file paths modified (one per line)
 - `{DESCRIPTION}` - Brief summary
 
-**3. Act on feedback:**
-- Fix Critical issues immediately
+**4. Act on feedback:**
+- Fix Critical issues immediately (especially concurrent conflicts)
 - Fix Important issues before proceeding
 - Note Minor issues for later
 - Push back if reviewer is wrong (with reasoning)
@@ -89,25 +121,76 @@ Use Task tool with flows:code-reviewer type, fill template at `code-reviewer.md`
 
 You: Let me request code review before proceeding.
 
-BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
-HEAD_SHA=$(git rev-parse HEAD)
+[Get commit SHAs]
+git log --oneline -n 2
+# Output:
+# 3df7661 test: add verification tests (8 tests)
+# a7981ec feat: add verifyIndex and repairIndex functions
+
+[Get files modified]
+git diff --name-only a7981ec^ 3df7661
+# Output:
+# src/verify.js
+# tests/verify.test.js
 
 [Dispatch flows:code-reviewer subagent]
   WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
   PLAN_OR_REQUIREMENTS: Task 2 from docs/plans/deployment-plan.md
-  BASE_SHA: a7981ec
-  HEAD_SHA: 3df7661
+  COMMIT_SHAS: |
+    3df7661
+    a7981ec
+  FILES_MODIFIED: |
+    src/verify.js
+    tests/verify.test.js
   DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
 
 [Subagent returns]:
+  Safety Check Results: ✓ Commits verified, no concurrent changes, no uncommitted changes
   Strengths: Clean architecture, real tests
   Issues:
-    Important: Missing progress indicators
+    Important: Missing progress indicators (verify.js:45-60)
     Minor: Magic number (100) for reporting interval
-  Assessment: Ready to proceed
+  Assessment: Ready to proceed with fixes
 
 You: [Fix progress indicators]
+[Request review again]
+[Review passes]
 [Continue to Task 3]
+```
+
+## Concurrent Execution Safety
+
+The code-reviewer is designed to work safely in concurrent environments:
+
+**Safe scenarios:**
+- Multiple task subagents running in parallel
+- Human editing files while review happens
+- Other commits added between task completion and review
+
+**How it works:**
+1. **Read-only operations:** Reviewer never checks out or modifies working tree
+2. **Explicit commit identification:** Uses exact commit SHAs, not ranges
+3. **Concurrent modification detection:** Checks if files were changed after task commits
+4. **Conflict classification:** Distinguishes real conflicts from benign concurrent changes
+
+**If concurrent conflict detected:**
+- Code reviewer stops and reports Critical issue
+- Includes details: which file, what changed, line ranges
+- You must manually resolve before proceeding
+
+**Example conflict:**
+```
+Task modified src/auth.js lines 10-25
+Concurrent work modified src/auth.js lines 15-30
+Overlapping range 15-25 = REAL CONFLICT
+```
+
+**Example benign concurrent change:**
+```
+Task modified src/auth.js lines 10-25
+Concurrent work modified src/auth.js lines 100-120
+No overlap, sufficient distance = BENIGN
+Code reviewer notes it but continues review
 ```
 
 ## Integration with Workflows
@@ -129,9 +212,17 @@ You: [Fix progress indicators]
 
 **Never:**
 - Skip review because "it's simple"
-- Ignore Critical issues
+- Ignore Critical issues (especially concurrent conflicts)
 - Proceed with unfixed Important issues
 - Argue with valid technical feedback
+- Use BASE_SHA/HEAD_SHA approach (deprecated, unsafe for concurrent execution)
+
+**If concurrent conflict detected:**
+- STOP immediately
+- Read the conflict details carefully
+- Manually inspect both changes
+- Resolve conflict appropriately
+- Re-run review after resolution
 
 **If reviewer wrong:**
 - Push back with technical reasoning
