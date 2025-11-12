@@ -68,11 +68,30 @@ Explore to find where [error/bug] originates:
 3. Identify entry points and trigger conditions
 4. Locate error handling code related to this issue
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Return: File paths, line numbers, function names, error flow
 
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Agent 1 Results (Error Source Discovery):**
+
+After Task tool returns, error source report appears in function_results.
+
+**Read and extract:**
+- Error messages and locations → Note all file:line references
+- Stack traces → Understand error propagation path
+- Entry points and trigger conditions → Identify what causes error
+- Error handling code → Locate related error handling
+
+**Use for Phase 2:**
+- Form root cause hypothesis using error flow and triggers
+- Identify instrumentation targets using file:line references
+- Plan Phase 3 investigation focusing on trigger conditions
 
 **Agent 2 - Related Component Discovery:**
 
@@ -86,11 +105,30 @@ Explore to map components related to [feature/module with bug]:
 3. Locate configuration, environment variables, dependencies
 4. Find tests covering this area (passing or failing)
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Return: Component map, data flow diagram, configuration locations
 
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Agent 2 Results (Related Component Discovery):**
+
+After Task tool returns, component map appears in function_results.
+
+**Read and extract:**
+- Component interactions → Understand what talks to what
+- Data flow diagram → Map inputs → transformations → outputs
+- Configuration locations → Note all config file:line references
+- Test coverage → Identify which tests cover this area
+
+**Use for Phase 2:**
+- Expand root cause hypothesis with component interactions
+- Identify additional instrumentation points from component map
+- Plan comprehensive fix covering all related components
 
 **Agent 3 - Pattern & History Discovery (Optional):**
 
@@ -104,19 +142,45 @@ Explore for similar bugs or patterns:
 3. Identify workarounds or temporary fixes in place
 4. Look for code comments explaining edge cases
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Return: Similar issues found, relevant comments, workarounds
 
 Thoroughness: medium
 """
 ```
 
+**Consuming Agent 3 Results (Pattern & History Discovery):**
+
+After Task tool returns, similar issues report appears in function_results.
+
+**Read and extract:**
+- Similar error messages → Check if known issue
+- TODO/FIXME comments → Understand known problems in area
+- Workarounds → Identify temporary fixes already in place
+- Edge case comments → Learn about known edge cases
+
+**Use for Phase 2:**
+- Refine hypothesis based on similar issues found
+- Check if existing workarounds provide clues
+- Avoid duplicate debugging if issue already understood
+
 **Verification pattern:**
 If findings conflict, dispatch additional targeted Explore agents to clarify specific contradictions.
 
 **Use findings for:**
 - Accurate root cause hypothesis in Phase 2
+  - Agent 1: Error flow and triggers
+  - Agent 2: Component interactions
+  - Agent 3: Similar issues and workarounds
 - Comprehensive instrumentation targets in Phase 3
+  - Agent 1: Error location file:line references
+  - Agent 2: Component boundary file:line references
 - Complete fix coverage in Phase 4
+  - Agent 2: All related components identified
+  - Agent 3: Existing workarounds to formalize
 
 2. **Read Error Messages Carefully**
    - Don't skip past errors or warnings
