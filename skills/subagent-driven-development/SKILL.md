@@ -308,19 +308,61 @@ If Critical/Important issues in review:
 1. **Extract commit SHAs:**
    - Find "## Commits Created" section
    - Extract all lines starting with "-"
-   - Parse SHA from each line (format: "- <SHA> (message)" or "- commit <SHA>")
-   - Remove "commit" prefix if present
+   - Parse SHA from each line using these patterns:
+
+     **Format 1: "- SHA (message)"**
+     ```
+     Input:  "- a1b2c3d (feat: add auth endpoints)"
+     Split:  ["a1b2c3d", "(feat: add auth endpoints)"]
+     Extract: "a1b2c3d"
+     ```
+
+     **Format 2: "- commit SHA"**
+     ```
+     Input:  "- commit f6e5d4c"
+     Split:  ["commit", "f6e5d4c"]
+     Extract: "f6e5d4c" (remove "commit" prefix)
+     ```
+
+     **Format 3: "- SHA" (SHA only)**
+     ```
+     Input:  "- a1b2c3d"
+     Extract: "a1b2c3d" (already clean)
+     ```
+
+     **Parsing steps:**
+     - Split line by whitespace
+     - Take second token (after "-")
+     - If token is "commit", take third token instead
+     - Remove any surrounding parentheses or quotes
+
    - Result: list of SHAs like ["a1b2c3d", "f6e5d4c"]
 
 2. **Extract files modified:**
    - Find "## Files Modified" section
    - Extract all lines starting with "-"
-   - Parse file path (format: "- path/to/file.js (status)")
-   - Keep just the path, strip (status)
+   - Parse file path from each line:
+
+     **Format: "- path/to/file.js (status)"**
+     ```
+     Input:  "- src/auth/login.js (created)"
+     Split:  Split by first "(" to separate path from status
+     Parts:  ["- src/auth/login.js ", "created)"]
+     Extract: "src/auth/login.js" (strip "- " prefix, trim whitespace)
+     ```
+
+     **Parsing steps:**
+     - Find first occurrence of "("
+     - Take everything before "(" as file path
+     - Remove leading "- " prefix
+     - Trim whitespace from both ends
+     - Result is clean file path
+
    - Result: list of paths like ["src/auth.js", "tests/auth.test.js"]
 
 3. **Validate extracted data:**
-   - Commit SHAs: non-empty list, each SHA matches pattern `[a-f0-9]{7,40}`
+   - Commit SHAs: non-empty list, each SHA matches pattern `[a-f0-9]{7,8}|[a-f0-9]{40}`
+     (Git uses either short SHAs of 7-8 chars or full 40-char SHAs)
    - Files modified: non-empty list, each path is non-empty string
 
    **If validation fails:**
