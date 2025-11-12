@@ -303,19 +303,102 @@ If Critical/Important issues in review:
 
 ### 3. Review Subagent's Work
 
+**Parse subagent report:**
+
+1. **Extract commit SHAs:**
+   - Find "## Commits Created" section
+   - Extract all lines starting with "-"
+   - Parse SHA from each line (format: "- <SHA> (message)" or "- commit <SHA>")
+   - Remove "commit" prefix if present
+   - Result: list of SHAs like ["a1b2c3d", "f6e5d4c"]
+
+2. **Extract files modified:**
+   - Find "## Files Modified" section
+   - Extract all lines starting with "-"
+   - Parse file path (format: "- path/to/file.js (status)")
+   - Keep just the path, strip (status)
+   - Result: list of paths like ["src/auth.js", "tests/auth.test.js"]
+
+3. **Validate extracted data:**
+   - Commit SHAs: non-empty list, each SHA matches pattern `[a-f0-9]{7,40}`
+   - Files modified: non-empty list, each path is non-empty string
+
+   **If validation fails:**
+   - Report parsing error to user
+   - Show what was extracted
+   - Ask subagent to reformat: "Your report is missing the 'Commits Created' section. Please add it with format: `- <SHA> (message)`"
+   - After subagent provides fixed report, retry parsing
+
+4. **Extract implementation summary:**
+   - Find "## Implementation Summary" section
+   - Use for WHAT_WAS_IMPLEMENTED
+
 **Dispatch code-reviewer subagent:**
+
 ```
 Task tool (flows:code-reviewer):
   Use template at requesting-code-review/code-reviewer.md
 
-  WHAT_WAS_IMPLEMENTED: [from subagent's report]
+  WHAT_WAS_IMPLEMENTED: [from subagent's Implementation Summary section]
   PLAN_OR_REQUIREMENTS: Task N from [plan-file]
-  BASE_SHA: [commit before task]
-  HEAD_SHA: [current commit]
-  DESCRIPTION: [task summary]
+  COMMIT_SHAS: [extracted list, one SHA per line, e.g.:]
+    a1b2c3d
+    f6e5d4c
+  FILES_MODIFIED: [extracted list, one path per line, e.g.:]
+    src/auth/login.js
+    tests/auth.test.js
+  DESCRIPTION: [task summary from plan]
 ```
 
-**Code reviewer returns:** Strengths, Issues (Critical/Important/Minor), Assessment
+**Code reviewer returns:**
+- Safety Check Results (commits verified, concurrent mods detected, uncommitted changes)
+- Strengths, Issues (Critical/Important/Minor), Assessment
+
+**Handle safety check failures:**
+
+If code reviewer reports safety check failure:
+
+**Concurrent modification conflict:**
+- STOP task execution
+- Report to user:
+  ```
+  Task N encountered concurrent modification conflict:
+
+  File: <file>
+  Conflict: [details from code reviewer]
+
+  This means another agent or person modified the same code this task changed.
+
+  Options:
+  1. Manually resolve conflict and retry review
+  2. Skip this task for now
+  3. Abort plan execution
+
+  What would you like to do?
+  ```
+- Wait for user decision
+
+**Commit not found:**
+- STOP task execution
+- Report to user:
+  ```
+  Task N safety check failed: Commit <SHA> not found
+
+  This may indicate:
+  - Commit was amended or rebased
+  - Git history was modified
+  - Repository state is inconsistent
+
+  Current HEAD: <git rev-parse HEAD>
+  Task reported SHAs: <list>
+
+  Please investigate and manually verify repository state.
+  ```
+- Do not proceed
+
+**Uncommitted changes:**
+- Code reviewer flags as Important issue
+- Continue to Step 4 (Apply Review Feedback)
 
 ### 4. Apply Review Feedback
 
