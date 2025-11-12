@@ -87,9 +87,69 @@ Find and document existing patterns for [specific concern].
    - file:line references
    - Brief descriptions
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Explore Results:**
+
+After Task tool returns, pattern report appears in function_results matching requested structure.
+
+**Read and extract:**
+1. **Primary Pattern section** from results
+   - Location (file:line-line) → Use for "Primary Implementation" heading
+   - Use Case → Copy to report
+   - Code Snippet → Include in report
+   - Key Aspects → List in report
+
+2. **Pattern Variations section** from results (if found)
+   - For each variation:
+     - Location (file:line-line) → Use for variation heading
+     - Code snippet → Include in report
+     - Context → Explain when each is used
+
+3. **Testing Patterns section** from results
+   - Test location (file:line) → Document in report
+   - Test code snippet → Include in report
+
+4. **Related Code section** from results
+   - Helper functions with file:line → List in "Related Utilities"
+   - Shared components → Document with file:line
+
+**Consumption pattern:** Narrative (Pattern 1) - results match report structure you specified, consume directly.
+
+**Example:**
+
+Function_results contains:
+```
+1. Primary Pattern (most common/mature implementation)
+   - Location: src/auth/user-auth.ts:15-45
+   - Use Case: User authentication with JWT tokens
+   - Code snippet:
+     ```
+     export async function authenticateUser(credentials) {
+       const user = await validateCredentials(credentials);
+       const token = generateJWT(user.id);
+       return { user, token };
+     }
+     ```
+   - Key Aspects:
+     - Validates credentials first
+     - Generates JWT after validation
+     - Returns both user and token
+
+2. Pattern Variations
+   - Variation A: API key authentication
+     Location: src/auth/api-key-auth.ts:20-60
+     When Used: For service-to-service authentication
+     [code snippet]
+```
+
+Use this directly to populate your pattern report sections.
 
 **Verification Pattern:**
 If findings seem incomplete or contradictory, dispatch 2-3 additional Explore agents with different search strategies (keyword variations, alternative patterns, different scopes).
@@ -97,6 +157,8 @@ If findings seem incomplete or contradictory, dispatch 2-3 additional Explore ag
 ### Report Structure
 
 **Standard Pattern Documentation:**
+
+**Source:** All content below populated from Explore function_results.
 
 ````markdown
 # Pattern: [Pattern Name]
