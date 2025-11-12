@@ -41,6 +41,10 @@ model = "haiku"
 prompt = """
 Explore codebase architecture and entry points.
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 **Methodology:**
 1. Read Entry Points: main files, server.js, app.js, index files, exports
 2. Identify project type, tech stack, frameworks used
@@ -60,6 +64,19 @@ Thoroughness: very thorough
 """
 ```
 
+**Consuming Agent 1 Results:**
+
+After Task tool returns, Agent 1's complete architecture report appears in function_results.
+
+**Read and extract:**
+- Project Overview → Use for "Executive Summary" in synthesis
+- Directory Structure → Use for "Architecture Overview" section
+- Entry Points → List with file:line in "Architecture Overview"
+- Architectural Patterns → Document in "Architecture Overview"
+- Module Organization → Explain in "Architecture Overview"
+
+**No parsing needed** - findings are narrative report matching the requested structure.
+
 **Agent 2 - Core Implementation & Data Flow:**
 
 ```python
@@ -68,6 +85,10 @@ subagent_type = "Explore"
 model = "haiku"
 prompt = """
 Explore core features and trace data flow.
+
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
 
 **Methodology:**
 1. Identify main features/capabilities from entry points
@@ -88,6 +109,19 @@ Thoroughness: very thorough
 """
 ```
 
+**Consuming Agent 2 Results:**
+
+After Task tool returns, Agent 2's implementation and data flow report appears in function_results.
+
+**Read and extract:**
+- Feature Inventory → Use for "Key Features" section in synthesis
+- Implementation Details → List with file:line in "Key Features"
+- Data Flow Diagrams → Copy to "Data Flow" section
+- Business Logic Locations → Reference in "Key Features"
+- Key Workflows → Document in synthesis
+
+**No parsing needed** - consume narrative report directly.
+
 **Agent 3 - Testing & Quality Infrastructure:**
 
 ```python
@@ -96,6 +130,10 @@ subagent_type = "Explore"
 model = "haiku"
 prompt = """
 Explore testing infrastructure as it exists.
+
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
 
 **Methodology:**
 1. Find test suite organization and locations
@@ -118,6 +156,14 @@ Thoroughness: very thorough
 """
 ```
 
+**Consuming Agent 3 Results:**
+
+**Read and extract:**
+- Test Organization → Use for "Testing Approach" section
+- Testing Tools → List frameworks and helpers in synthesis
+- Test Patterns → Provide examples in "Testing Approach"
+- CI/CD Setup → Document in "Testing Approach" or separate section
+
 **Agent 4 - Development Workflow & Configuration:**
 
 ```python
@@ -126,6 +172,10 @@ subagent_type = "Explore"
 model = "haiku"
 prompt = """
 Explore development setup and configuration.
+
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
 
 **Methodology:**
 1. Find build/run commands in package.json, Makefile, scripts
@@ -146,6 +196,14 @@ Thoroughness: very thorough
 """
 ```
 
+**Consuming Agent 4 Results:**
+
+**Read and extract:**
+- Setup Instructions → Use for "Development Workflow" section
+- Configuration Files → List with file:line in "Configuration"
+- Dev Commands → Provide exact commands in "Development Workflow"
+- Documentation Locations → Reference in synthesis
+
 **Agent 5 - Integration Points & Dependencies:**
 
 ```python
@@ -154,6 +212,10 @@ subagent_type = "Explore"
 model = "haiku"
 prompt = """
 Explore integrations and external dependencies.
+
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
 
 **Methodology:**
 1. Find external service integrations with file:line references
@@ -174,12 +236,27 @@ Thoroughness: very thorough
 """
 ```
 
+**Consuming Agent 5 Results:**
+
+**Read and extract:**
+- External Services → Use for "Integration Points" section
+- Database → Document connection and query patterns
+- Third-Party Dependencies → List major libraries in synthesis
+- Auth Implementation → Explain in "Integration Points"
+
 **Verification Pattern:**
 If findings from different agents contradict, dispatch 2-3 additional targeted Explore agents with different search strategies to triangulate truth.
 
 ### Phase 2: Synthesis & Onboarding Report
 
 **Synthesize all Explore findings into structured onboarding document:**
+
+**Source of content:** Each section populated from corresponding Agent's function_results:
+- Architecture Overview ← Agent 1 results
+- Key Features & Data Flow ← Agent 2 results
+- Testing Approach ← Agent 3 results
+- Development Workflow & Configuration ← Agent 4 results
+- Integration Points ← Agent 5 results
 
 **Format:**
 ````markdown
