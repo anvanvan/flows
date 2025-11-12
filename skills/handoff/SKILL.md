@@ -68,28 +68,73 @@ Capture files with their line number references when available.
 - Implementation suggestions
 - Testing considerations
 
-### Step 3: Assess Completeness
+### Step 3: Context Extraction: Multi-Faceted Exploration
 
-Review what you've extracted. Ask yourself:
-- Do I have the files where the issue occurs?
-- If code changed, do I have commit context? (might be in conversation)
-- Is the analysis complete enough to understand the problem?
+**Dispatch 3 Explore agents IN PARALLEL** for comprehensive handoff:
 
-**Commit handling logic:**
-1. If commits found in conversation → use those, proceed to Step 4
-2. If NO commits in conversation AND files present → spawn Explore agent to get git history
-3. If NO commits and NO files → skip commits section, proceed to Step 4
+**Agent 1 - Commit History:**
 
-**When spawning Explore agent for git history:**
-- Task: "Get last 10 commits for each of these files: [list file paths]"
-- The agent should use: `git log -n 10 --oneline -- <filepath>` for each file
-- Deduplicate commits across files (same commit may touch multiple files)
-- Format as: `abc1234 - Commit subject line`
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Use git log to fetch commit history for [branch/feature or files].
 
-**File completeness check:**
-- If files seem incomplete → ask: "Should I spawn subagent to search for additional related files?"
+If files mentioned: Get last 10 commits for each file using:
+git log -n 10 --oneline -- <filepath>
 
-Only ask about files if there's genuine uncertainty. Trust the conversation context first.
+Deduplicate commits across files (same commit may touch multiple files).
+
+Return: Commit SHAs (short form), messages, deduplicated list
+
+Thoroughness: medium
+"""
+```
+
+**Agent 2 - Modified Files Analysis:**
+
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore modified files to understand changes:
+1. Identify all files changed in recent commits or mentioned in conversation
+2. Understand purpose of each modified file (what it does in the system)
+3. Find related files not yet modified (potential incompleteness)
+4. Locate tests covering modified code
+5. Find documentation that needs updating
+
+Return: File inventory with purpose, related files, test coverage, doc status
+
+Thoroughness: very thorough
+"""
+```
+
+**Agent 3 - Issue Context Discovery:**
+
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore codebase for issue context:
+1. Find code comments, TODOs related to [issue/feature]
+2. Locate similar features or implementations
+3. Identify dependencies and integrations
+4. Find configuration or environment requirements
+
+Return: Complete context map for next session
+
+Thoroughness: very thorough
+"""
+```
+
+**Handoff document includes:**
+- Git history (commits, SHAs from Agent 1)
+- File inventory with purpose and relationships (Agent 2)
+- Test coverage assessment (Agent 2)
+- Related code not yet addressed (Agent 2)
+- Issue context from codebase (Agent 3)
 
 ### Step 4: Format the Handoff Prompt
 
@@ -106,20 +151,36 @@ Use this exact structure:
 - Any architectural observations]
 
 ## Files
-- path/to/file1.tsx:line-range
-- path/to/file2.tsx:line-range
-- path/to/related-file.tsx
+[From Agent 2 - Modified Files Analysis:]
+- path/to/file1.tsx:line-range - [Purpose: what this file does]
+- path/to/file2.tsx:line-range - [Purpose: what this file does]
+- path/to/related-file.tsx - [Purpose: what this file does]
+
+**Related Files (not yet modified):**
+- path/to/potentially-affected.tsx - [Why relevant]
+
+**Test Coverage:**
+- path/to/test-file.test.tsx - [What's tested]
+- [Gaps in coverage identified]
+
+**Documentation Needs:**
+- [Docs that need updating based on changes]
 
 *Read these files to verify current state - code may have changed since this analysis.*
 
 ## Relevant Commits
-[Commits that touched the files in this issue:
+[From Agent 1 - Commit History:
 abc1234 - Commit subject line
 def5678 - Another commit subject
 
-Source: {conversation | git history for mentioned files}
+If no commits available, omit this section]
 
-If no commits in conversation and no files mentioned, omit this section entirely]
+## Issue Context
+[From Agent 3 - Issue Context Discovery:
+- Code comments/TODOs related to this issue
+- Similar features or implementations found
+- Dependencies and integrations identified
+- Configuration or environment requirements]
 
 ## Learnings & Patterns
 [Extracted from conversation:
