@@ -44,6 +44,41 @@ Write code before the test? Delete it. Start over.
 
 Implement fresh from tests. Period.
 
+## Before Writing Test: Test Pattern Discovery
+
+**Dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to find testing patterns for [feature/component]:
+1. Locate existing tests for similar features
+2. Identify test framework, assertion library, mocking patterns in use
+3. Find test fixtures, factories, or helpers available
+4. Understand test organization (describe/it structure, naming conventions)
+5. Locate test utilities or custom matchers
+
+Return:
+- Example test files to model after (file paths + structure)
+- Testing tools and patterns in use
+- Available test helpers/fixtures
+- Naming and organization conventions
+- Setup/teardown patterns
+
+Thoroughness: very thorough
+"""
+```
+
+**Write test matching discovered patterns:**
+- Use same test framework structure
+- Leverage existing fixtures/helpers
+- Follow naming conventions
+- Match assertion styles
+
+Then proceed to RED phase (watch test fail).
+
 ## Red-Green-Refactor
 
 ```dot
