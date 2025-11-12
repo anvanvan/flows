@@ -80,6 +80,43 @@ When findings contradict or seem incomplete:
 3. Reference Explore results in subsequent steps
 4. Include file:line references in all outputs
 
+## Result Consumption Patterns
+
+### Critical Enhancement (2025-11-12)
+
+All skills now include **explicit result consumption instructions** showing HOW to extract data from Task tool invocations.
+
+**Three consumption patterns:**
+
+1. **Pattern 1: Narrative Consumption (90% of usage)**
+   - Explore returns structured narrative matching requested format
+   - Read findings directly from function_results
+   - Reference specific file:line mentions
+   - No parsing required
+
+2. **Pattern 2: Structured Parsing (10% of usage)**
+   - Implementation tasks return strict 5-section reports
+   - Parse specific sections using regex and text extraction
+   - Validate extracted data (commit SHAs, file paths)
+   - Re-prompt if validation fails
+
+3. **Pattern 3: Semantic Analysis (used in code review)**
+   - Code reviewer returns analysis with sections
+   - Search for keywords and categories
+   - Make workflow decisions based on content
+   - No rigid parsing
+
+**Documentation:**
+- `/docs/task-tool-mechanics.md` - Complete Task tool reference
+- `/docs/skill-task-consumption-template.md` - Template for adding to skills
+
+**Enhancement locations:**
+All 18 skills now have "Consuming [Agent Name] Results:" sections after each Task dispatch showing:
+- Result location (function_results block)
+- Result format (what sections to expect)
+- How to consume (which pattern to use)
+- Use findings for (specific actions)
+
 ## Success Metrics
 
 **Quality (PRIMARY):**
@@ -91,6 +128,12 @@ When findings contradict or seem incomplete:
 **Efficiency (SECONDARY):**
 - Token savings: 60-80% reduction for multi-search workflows
 - Context cleanliness: Isolated Explore contexts prevent pollution
+
+**Result Consumption (ADDED 2025-11-12):**
+- ✅ Explicit extraction instructions in all skills
+- ✅ Three consumption patterns documented
+- ✅ Function_results mechanism clarified
+- ✅ Parallel result correlation explained
 
 ## Next Steps
 
