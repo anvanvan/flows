@@ -51,25 +51,92 @@ You MUST complete each phase before proceeding to the next.
 
 **BEFORE attempting ANY fix:**
 
-1. **Read Error Messages Carefully**
+#### Step 1: Multi-Domain Exploration (MANDATORY)
+
+**Dispatch 2-3 Explore agents IN PARALLEL** for comprehensive discovery:
+
+**Agent 1 - Error Source Discovery:**
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to find where [error/bug] originates:
+1. Search for error messages, stack traces, logged errors
+2. Find all locations where [problematic behavior] occurs
+3. Identify entry points and trigger conditions
+4. Locate error handling code related to this issue
+
+Return: File paths, line numbers, function names, error flow
+
+Thoroughness: very thorough
+"""
+```
+
+**Agent 2 - Related Component Discovery:**
+
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to map components related to [feature/module with bug]:
+1. Find all components that interact with [problematic code]
+2. Identify data flow: inputs, transformations, outputs
+3. Locate configuration, environment variables, dependencies
+4. Find tests covering this area (passing or failing)
+
+Return: Component map, data flow diagram, configuration locations
+
+Thoroughness: very thorough
+"""
+```
+
+**Agent 3 - Pattern & History Discovery (Optional):**
+
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore for similar bugs or patterns:
+1. Search for similar error messages or behavior in codebase
+2. Find TODO/FIXME comments related to this area
+3. Identify workarounds or temporary fixes in place
+4. Look for code comments explaining edge cases
+
+Return: Similar issues found, relevant comments, workarounds
+
+Thoroughness: medium
+"""
+```
+
+**Verification pattern:**
+If findings conflict, dispatch additional targeted Explore agents to clarify specific contradictions.
+
+**Use findings for:**
+- Accurate root cause hypothesis in Phase 2
+- Comprehensive instrumentation targets in Phase 3
+- Complete fix coverage in Phase 4
+
+2. **Read Error Messages Carefully**
    - Don't skip past errors or warnings
    - They often contain the exact solution
    - Read stack traces completely
    - Note line numbers, file paths, error codes
 
-2. **Reproduce Consistently**
+3. **Reproduce Consistently**
    - Can you trigger it reliably?
    - What are the exact steps?
    - Does it happen every time?
    - If not reproducible → gather more data, don't guess
 
-3. **Check Recent Changes**
+4. **Check Recent Changes**
    - What changed that could cause this?
    - Git diff, recent commits
    - New dependencies, config changes
    - Environmental differences
 
-4. **Gather Evidence in Multi-Component Systems**
+5. **Gather Evidence in Multi-Component Systems**
 
    **WHEN system has multiple components (CI → build → signing, API → service → database):**
 
@@ -107,7 +174,7 @@ You MUST complete each phase before proceeding to the next.
 
    **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
 
-5. **Trace Data Flow**
+6. **Trace Data Flow**
 
    **WHEN error is deep in call stack:**
 
