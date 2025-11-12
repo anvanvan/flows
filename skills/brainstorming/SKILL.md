@@ -52,9 +52,26 @@ Return:
 - Testing approaches in use (frameworks, patterns, coverage)
 - Any patterns to avoid (with reasoning)
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Pattern Discovery Results:**
+
+After Task tool returns, pattern discovery report appears in function_results.
+
+**Read and extract:**
+- Existing similar implementations → Understand what's already done
+- Architectural patterns observed → Know what patterns are in use
+- Reusable components found → Identify what can be leveraged
+- Testing approaches in use → Understand testing expectations
+- Any patterns to avoid → Note what not to do
+
+**Consumption pattern:** Narrative (Pattern 1) - read findings and apply to approach proposals.
 
 **Use findings to:**
 - Propose approaches that fit existing architecture
