@@ -37,7 +37,49 @@ Stop. Don't proceed to Step 2.
 
 **If tests pass:** Continue to Step 2.
 
-### Step 2: Determine Base Branch
+### Step 2: Pre-Finish Completeness Check
+
+**Before presenting options, dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to verify branch is complete:
+1. Find any TODOs, FIXMEs, or temporary code added during work
+2. Locate debug logging or console statements added
+3. Identify commented-out code or experimental changes
+4. Find any test.skip, test.only, or temporary test modifications
+5. Locate documentation that needs updating based on changes
+
+Return:
+- Cleanup items needed before merging
+- Temporary code to remove or explain
+- Documentation gaps
+- Test modifications to address
+
+Thoroughness: very thorough
+"""
+```
+
+**If cleanup found:**
+Present cleanup checklist before offering merge/PR options:
+```
+Before finishing, these cleanup items were detected:
+
+[List items found]
+
+Would you like to:
+1. Clean these up now (I'll help)
+2. Proceed anyway (I'll note in PR/commit)
+3. Cancel and fix manually
+```
+
+**If clean:**
+Proceed to Step 3.
+
+### Step 3: Determine Base Branch
 
 ```bash
 # Try common base branches
@@ -46,7 +88,7 @@ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 
 Or ask: "This branch split from main - is that correct?"
 
-### Step 3: Present Options
+### Step 4: Present Options
 
 Present exactly these 4 options:
 
@@ -63,7 +105,7 @@ Which option?
 
 **Don't add explanation** - keep options concise.
 
-### Step 4: Execute Choice
+### Step 5: Execute Choice
 
 #### Option 1: Merge Locally
 
@@ -84,7 +126,7 @@ git merge <feature-branch>
 git branch -d <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
 #### Option 2: Push and Create PR
 
@@ -103,7 +145,7 @@ EOF
 )"
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
 #### Option 3: Keep As-Is
 
@@ -131,9 +173,9 @@ git checkout <base-branch>
 git branch -D <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
-### Step 5: Cleanup Worktree
+### Step 6: Cleanup Worktree
 
 **For Options 1, 2, 4:**
 
