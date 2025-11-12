@@ -51,9 +51,9 @@ This document summarizes the comprehensive Explore agent integration across the 
 
 ## Total Impact
 
-- **21 existing skills** enhanced with Explore integration
+- **16 existing skills** enhanced with Explore integration
 - **2 new skills** enabled by Explore capabilities
-- **23 total skills** now leverage Explore agent
+- **18 total skills** now leverage Explore agent
 - **Estimated 60-80% token reduction** for multi-search workflows
 - **Accuracy and completeness** prioritized throughout
 
