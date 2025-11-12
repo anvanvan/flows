@@ -34,6 +34,37 @@ digraph when_to_use {
 - Unclear where invalid data originated
 - Need to find which test/code triggers the problem
 
+## Tracing Preparation: Call Chain Discovery
+
+**Before manual tracing, dispatch Explore agent** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore to map the complete call chain for [error location]:
+1. Find all callers of [function/method where error occurs]
+2. Trace data flow backward: where does [problematic data] originate?
+3. Identify all entry points that could reach this code path
+4. Locate initialization, configuration, or setup code that affects this chain
+5. Find any middleware, decorators, or interceptors in the chain
+
+Return:
+- Call chain map (from entry points to error location)
+- Data origin points (where values are first set/created)
+- All intermediate transformations
+- Configuration/setup that affects behavior
+
+Thoroughness: very thorough
+"""
+```
+
+**Use findings to:**
+- Know exact tracing path before instrumenting
+- Identify likely root cause locations upfront
+- Instrument all relevant points in single pass
+
 ## The Tracing Process
 
 ### 1. Observe the Symptom
