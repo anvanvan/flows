@@ -42,9 +42,26 @@ Explore to find all entry points for [feature/module]:
 
 Return: All entry points with file paths and signatures
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Layer 1 Results (Entry Points):**
+
+After Task tool returns, entry point discovery report appears in function_results.
+
+**Read and extract:**
+- All entry points with file paths and signatures
+- API endpoints, route handlers, CLI commands
+- Event handlers, message queue consumers
+- Public class methods, exported functions
+- Form inputs, user interactions
+
+**Use for:** Implementing validation at EVERY entry point found. No entry point missed.
 
 **Layer 2 - Business Logic Discovery:**
 
@@ -61,9 +78,25 @@ Explore to find business logic validation points:
 
 Return: Business logic locations requiring validation
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Layer 2 Results (Business Logic):**
+
+After Task tool returns, business logic validation points appear in function_results.
+
+**Read and extract:**
+- Service methods, domain logic functions
+- State transition validations
+- Business rule enforcement locations
+- Data consistency checks
+
+**Use for:** Implementing validation at EVERY business logic point found.
 
 **Layer 3 - Environment Discovery:**
 
@@ -80,9 +113,25 @@ Explore to find environment interaction points:
 
 Return: All boundary points with external systems
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
+
+**Consuming Layer 3 Results (Environment):**
+
+After Task tool returns, environment interaction points appear in function_results.
+
+**Read and extract:**
+- Database queries, ORM operations
+- External API calls, HTTP clients
+- File system operations
+- Cache access, session management
+
+**Use for:** Implementing validation at EVERY boundary point found. Complete coverage ensured.
 
 **Use findings to:**
 - Implement validation at EVERY identified point
