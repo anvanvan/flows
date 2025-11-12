@@ -343,3 +343,72 @@ If section contains "Missing tests":
 **Step 4: Make workflow decisions based on content**
 
 No rigid parsing - read and interpret like a human would.
+
+## Parallel Dispatch and Result Correlation
+
+### How Parallel Dispatch Works
+
+Skills can dispatch multiple Task tool invocations in a single message:
+
+**Example from codebase-research:**
+```
+Dispatch 5 Explore agents IN PARALLEL:
+
+1. Agent 1 - Architecture
+[Task tool invocation 1]
+
+2. Agent 2 - Implementation
+[Task tool invocation 2]
+
+3. Agent 3 - Testing
+[Task tool invocation 3]
+
+4. Agent 4 - Dev Workflow
+[Task tool invocation 4]
+
+5. Agent 5 - Integrations
+[Task tool invocation 5]
+```
+
+**Result correlation:**
+- Each invocation gets its own function_results block
+- Results appear in same order as invocations
+- Each function_results contains complete output from one agent
+
+**Reading parallel results:**
+
+```
+After 5 parallel invocations, you receive:
+
+<function_results>
+[Agent 1 output]
+</function_results>
+
+<function_results>
+[Agent 2 output]
+</function_results>
+
+<function_results>
+[Agent 3 output]
+</function_results>
+
+<function_results>
+[Agent 4 output]
+</function_results>
+
+<function_results>
+[Agent 5 output]
+</function_results>
+```
+
+**Consumption:**
+- Read each function_results in order
+- Correlate by position: 1st result = Agent 1, 2nd result = Agent 2, etc.
+- Synthesize findings across all results
+
+### Benefits of Parallel Dispatch
+
+- **Speed:** All agents work simultaneously
+- **Comprehensiveness:** Multiple perspectives found at once
+- **Triangulation:** Cross-validate findings across agents
+- **Isolation:** Each agent has clean context
