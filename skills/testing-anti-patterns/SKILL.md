@@ -300,3 +300,30 @@ TDD cycle:
 If TDD reveals you're testing mock behavior, you've gone wrong.
 
 Fix: Test real behavior or question why you're mocking at all.
+
+## Anti-Pattern Detection (Optional Enhancement)
+
+**When user requests "check for testing anti-patterns", dispatch Explore** with thoroughness: "very thorough"
+
+Use Task tool:
+```python
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore test suite to detect anti-patterns:
+1. Find tests that mock everything and test no real behavior
+2. Locate production code with test-only methods (testable flags, test helpers in prod)
+3. Identify tests that don't verify real behavior (only check mocks were called)
+4. Find over-mocked tests (mocking dependencies without understanding)
+5. Locate tests that would pass even if implementation is broken
+
+Return:
+- Anti-pattern instances found (file paths, line numbers)
+- Severity assessment
+- Recommended fixes
+
+Thoroughness: very thorough
+"""
+```
+
+**Generate anti-pattern report with examples and fixes.**
