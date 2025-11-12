@@ -145,6 +145,7 @@ Task tool (general-purpose):
 
     Use `git log --oneline -n <count>` to get your commit SHAs.
     Include ALL commits you created during this task.
+    Both formats are acceptable: "a1b2c3d (message)" or just "a1b2c3d"
 
     ## Files Modified
     - path/to/file.js (created|modified|deleted)
@@ -156,6 +157,8 @@ Task tool (general-purpose):
     ## Issues Encountered
     [Any problems, workarounds, or decisions made. Write "None" if no issues.]
     ```
+
+    ALL FIVE SECTIONS ARE REQUIRED. Missing or malformed sections will require correction before proceeding.
 
     **Example report:**
     ```
