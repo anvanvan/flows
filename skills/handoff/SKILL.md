@@ -88,6 +88,10 @@ Deduplicate commits across files (same commit may touch multiple files).
 
 Return: Commit SHAs (short form), messages, deduplicated list
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: medium
 """
 ```
@@ -107,6 +111,10 @@ Explore modified files to understand changes:
 
 Return: File inventory with purpose, related files, test coverage, doc status
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
@@ -125,16 +133,47 @@ Explore codebase for issue context:
 
 Return: Complete context map for next session
 
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
 Thoroughness: very thorough
 """
 ```
 
+**Consuming 3 Agent Results:**
+
+After Task tool returns, you receive 3 function_results blocks (one per agent).
+
+**Agent 1 - Commit History:**
+- Read from first function_results
+- Extract commit SHAs (short form) and messages
+- Deduplicated list of commits
+
+**Agent 2 - Modified Files Analysis:**
+- Read from second function_results
+- Extract file inventory with purpose explanations
+- Note related files not yet modified
+- Get test coverage assessment
+- Identify documentation gaps
+
+**Agent 3 - Issue Context Discovery:**
+- Read from third function_results
+- Extract code comments, TODOs related to issue
+- Get similar feature implementations
+- Note dependencies and integrations
+- Understand configuration requirements
+
+**Consumption pattern:** Narrative (Pattern 1) - read all three reports and synthesize into handoff document.
+
 **Handoff document includes:**
-- Git history (commits, SHAs from Agent 1)
-- File inventory with purpose and relationships (Agent 2)
-- Test coverage assessment (Agent 2)
-- Related code not yet addressed (Agent 2)
-- Issue context from codebase (Agent 3)
+- Git history (commits, SHAs) ← Agent 1 function_results
+- File inventory with purpose and relationships ← Agent 2 function_results
+- Test coverage assessment ← Agent 2 function_results
+- Related code not yet addressed ← Agent 2 function_results
+- Issue context from codebase ← Agent 3 function_results
+
+**All content sourced directly from agent function_results** - no speculation, only discovered facts.
 
 ### Step 4: Format the Handoff Prompt
 
