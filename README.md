@@ -162,6 +162,32 @@ The web-researcher agent:
 
 The agent is integrated throughout flows skills with strategic invocation points in debugging, brainstorming, planning, and skill-creation workflows.
 
+## Concurrent-Safe Code Review
+
+Flows includes a concurrent-safe code review system designed for environments where multiple agents or humans work simultaneously.
+
+### The Problem
+
+Traditional code review systems use git ranges (BASE_SHA..HEAD_SHA) which can cause data loss when multiple agents or humans work in parallel.
+
+### The Solution
+
+The commit-SHA-list approach enables safe concurrent execution:
+- Task subagents report exact commit SHAs they created
+- Code reviewer uses read-only git operations (never checkout/reset)
+- Detects concurrent modifications to same files
+- Classifies conflicts as real (stop) or benign (continue)
+- Fails loudly on conflicts instead of silently corrupting
+
+### Features
+
+- **Safety Checks**: Verify commits exist, detect concurrent modifications, check for uncommitted changes
+- **Conflict Classification**: Distinguishes real conflicts from benign concurrent changes
+- **Read-Only Operations**: No working tree modifications during review
+- **Clear Reporting**: Explicit safety check results and conflict details
+
+For details, see [Concurrent-Safe Code Review](docs/concurrent-safe-code-review.md).
+
 A comprehensive skills library of proven techniques, patterns, and workflows for AI coding assistants.
 
 ## What You Get
