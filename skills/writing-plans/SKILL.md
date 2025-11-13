@@ -33,7 +33,11 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use flows:subagent-driven-development to implement this plan task-by-task.
+> **For Claude:** Two execution options available:
+> - **flows:subagent-driven-development** (Recommended): Fresh subagent per task with code review between tasks
+> - **flows:executing-plans** (Alternative): Batched execution with manual checkpoints
+>
+> Use whichever execution method the user invokes. If user calls /flows:execute-plan or /flows:execute-plan-gradual, they've chosen executing-plans.
 
 **Goal:** [One sentence describing what this builds]
 
