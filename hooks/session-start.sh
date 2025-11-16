@@ -15,7 +15,7 @@ if [ -d "$legacy_skills_dir" ]; then
 fi
 
 # Read using-flows content
-using_flows_content=$(cat "${PLUGIN_ROOT}/skills/00-meta/using-flows/SKILL.md" 2>&1 || echo "Error reading using-flows skill")
+using_flows_content=$(cat "${PLUGIN_ROOT}/skills/using-flows/SKILL.md" 2>&1 || echo "Error reading using-flows skill")
 
 # Escape outputs for JSON
 using_flows_escaped=$(echo "$using_flows_content" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | awk '{printf "%s\\n", $0}')
