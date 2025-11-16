@@ -47,6 +47,27 @@ Use for ANY technical issue:
 
 You MUST complete each phase before proceeding to the next.
 
+### Phase 0: Create Safety Net (For Legacy Code)
+
+**REQUIRED when debugging code without tests:**
+
+**REQUIRED SUB-SKILL:** Use flows:characterization-testing first
+
+Before attempting to debug untested legacy code:
+1. Create characterization tests for the buggy behavior
+2. Document current behavior (including the bug)
+3. Now you can safely investigate and fix
+
+**Why this is mandatory:**
+- Without tests, you cannot verify the fix works
+- Without tests, you cannot prevent regressions
+- Characterization tests capture current behavior as baseline
+- Once you have tests, you can refactor safely
+
+**Skip Phase 0 only if:**
+- Code already has comprehensive test coverage
+- You are debugging a test failure (tests already exist)
+
 ### Phase 1: Root Cause Investigation
 
 **BEFORE attempting ANY fix:**
