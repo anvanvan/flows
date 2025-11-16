@@ -199,7 +199,7 @@ A comprehensive skills library of proven techniques, patterns, and workflows for
 - **Meta Skills** - Creating, testing, and sharing skills
 
 Plus:
-- **Slash Commands** - `/flows:brainstorm`, `/flows:write-plan`, `/flows:execute-plan`
+- **Slash Commands** - `/flows:brainstorm`, `/flows:write-plan`, `/flows:subagents-execution`, `/flows:gradual-execution`
 - **Automatic Integration** - Skills activate automatically when relevant
 - **Consistent Workflows** - Systematic approaches to common engineering tasks
 
@@ -235,7 +235,8 @@ Check that commands appear:
 # Should see:
 # /flows:brainstorm - Interactive design refinement
 # /flows:write-plan - Create implementation plan
-# /flows:execute-plan - Execute plan in batches
+# /flows:subagents-execution - Execute plan with fresh subagent per task
+# /flows:gradual-execution - Execute plan in batches with checkpoints
 ```
 
 ### Codex (Experimental)
@@ -260,7 +261,8 @@ Tell Codex to fetch https://raw.githubusercontent.com/anvanvan/flows/refs/heads/
 
 **Execute the plan:**
 ```
-/flows:execute-plan
+/flows:subagents-execution  # Fresh subagent per task (recommended)
+/flows:gradual-execution    # Batched execution with checkpoints
 ```
 
 ### Automatic Skill Activation

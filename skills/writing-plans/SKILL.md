@@ -37,7 +37,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 > - **flows:subagent-driven-development** (Recommended): Fresh subagent per task with code review between tasks
 > - **flows:executing-plans** (Alternative): Batched execution with manual checkpoints
 >
-> Use whichever execution method the user invokes. If user calls /flows:execute-plan or /flows:execute-gradual, they've chosen executing-plans.
+> Use whichever execution method the user invokes. If user calls /flows:subagents-execution or /flows:gradual-execution, they've chosen executing-plans.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -323,13 +323,13 @@ After saving the plan, use AskUserQuestion to offer execution choices:
 **Options:**
 
 1. **"Copy command for new session"** (Recommended)
-   - Description: "Copies `/flows:execute-plan @docs/plans/filename.md` to clipboard for pasting into a fresh session"
+   - Description: "Copies `/flows:subagents-execution @docs/plans/filename.md` to clipboard for pasting into a fresh session"
 
 2. **"Execute with subagent-driven-development (this session)"**
    - Description: "Dispatch fresh subagent per task with code review between tasks - fast iteration in current session"
 
 3. **"Execute in parallel session (gradual)"**
-   - Description: "Open new session, run `/flows:execute-gradual` for batched execution with manual checkpoints"
+   - Description: "Open new session, run `/flows:gradual-execution` for batched execution with manual checkpoints"
 
 4. Auto-provided "Other" option allows refinement feedback
 
@@ -337,8 +337,8 @@ After saving the plan, use AskUserQuestion to offer execution choices:
 
 **If "Copy command for new session" selected:**
 - Extract actual plan filename from the path where plan was saved
-- Copy to clipboard: `/flows:execute-plan @docs/plans/<actual-filename>.md`
-- Example: If saved to `docs/plans/2025-11-11-auth-system.md`, copy: `/flows:execute-plan @docs/plans/2025-11-11-auth-system.md`
+- Copy to clipboard: `/flows:subagents-execution @docs/plans/<actual-filename>.md`
+- Example: If saved to `docs/plans/2025-11-11-auth-system.md`, copy: `/flows:subagents-execution @docs/plans/2025-11-11-auth-system.md`
 - Confirm: "Command copied to clipboard! Paste into a new session to begin execution."
 - Skill completes
 
@@ -349,7 +349,7 @@ After saving the plan, use AskUserQuestion to offer execution choices:
 
 **If "Execute in parallel session (gradual)" selected:**
 - Guide them to open new session in worktree
-- Tell them to run `/flows:execute-gradual`
+- Tell them to run `/flows:gradual-execution`
 - **REQUIRED SUB-SKILL:** New session uses flows:executing-plans
 
 **If "Other" / refinement feedback provided:**
