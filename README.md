@@ -276,52 +276,47 @@ Skills activate automatically when relevant. For example:
 
 ### Skills Library
 
-Skills are organized by workflow phases (00-meta through 07-completion):
+Skills are organized by category:
 
-**00-meta** - Understanding the system
-- **using-flows** - Introduction to the skills system
-- **writing-skills** - Create new skills following best practices
-- **testing-skills-with-subagents** - Validate skill quality
-- **sharing-skills** - Contribute skills back via branch and PR
-
-**01-understanding** - Code comprehension
-- **codebase-research** - Systematic codebase exploration
-- **pattern-discovery** - Find existing patterns to follow
-- **knowledge-lineages** - Trace historical context of decisions
-
-**02-planning** - Design & architecture
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **when-stuck** - Problem-solving technique dispatcher
-
-**03-preparation** - Safety nets
-- **characterization-testing** - Document legacy code behavior before refactoring
-- **defense-in-depth** - Multiple validation layers
-- **using-git-worktrees** - Parallel development branches
-
-**04-implementation** - Code writing
+**Testing & Quality**
 - **test-driven-development** - RED-GREEN-REFACTOR cycle
-- **subagent-driven-development** - Fast iteration with quality gates
+- **testing-anti-patterns** - Common pitfalls to avoid
+- **characterization-testing** - Document legacy code behavior before refactoring
 - **condition-based-waiting** - Async test patterns
-- **strangler-fig-pattern** - Incremental legacy system replacement
+- **verification-before-completion** - Ensure it's actually fixed
 
-**05-debugging** - Problem solving
+**Debugging**
 - **systematic-debugging** - 4-phase root cause process
 - **root-cause-tracing** - Find the real problem
 - **dispatching-parallel-agents** - Concurrent debugging workflows
 
-**06-validation** - Quality assurance
-- **verification-before-completion** - Ensure it's actually fixed
+**Development**
+- **subagent-driven-development** - Fast iteration with quality gates
+- **using-git-worktrees** - Parallel development branches
+- **finishing-a-development-branch** - Merge/PR decision workflow
+- **strangler-fig-pattern** - Incremental legacy system replacement
+- **defense-in-depth** - Multiple validation layers
+
+**Code Understanding**
+- **codebase-research** - Systematic codebase exploration
+- **pattern-discovery** - Find existing patterns to follow
+- **knowledge-lineages** - Trace historical context of decisions
+
+**Refactoring**
+- **brainstorming** - Socratic design refinement
+- **writing-plans** - Detailed implementation plans
+- **when-stuck** - Problem-solving technique dispatcher
+
+**Collaboration**
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
-- **testing-anti-patterns** - Common pitfalls to avoid
-
-**07-completion** - Work finalization
-- **finishing-a-development-branch** - Merge/PR decision workflow
 - **handoff** - Context handoff for new Claude session
 
-**Cross-phase** - Used throughout workflow
-- **executing-plans** - Batch execution with checkpoints
+**Meta**
+- **using-flows** - Introduction to the skills system
+- **writing-skills** - Create new skills following best practices
+- **testing-skills-with-subagents** - Validate skill quality
+- **sharing-skills** - Contribute skills back via branch and PR
 
 ### Commands
 
@@ -356,7 +351,7 @@ Skills live directly in this repository. To contribute:
 4. Use the `testing-skills-with-subagents` skill to validate quality
 5. Submit a PR
 
-See `skills/00-meta/writing-skills/SKILL.md` for the complete guide.
+See `skills/writing-skills/SKILL.md` for the complete guide.
 
 ## Updating
 
