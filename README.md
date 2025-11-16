@@ -276,33 +276,52 @@ Skills activate automatically when relevant. For example:
 
 ### Skills Library
 
-**Testing** (`skills/testing/`)
-- **test-driven-development** - RED-GREEN-REFACTOR cycle
-- **condition-based-waiting** - Async test patterns
-- **testing-anti-patterns** - Common pitfalls to avoid
+Skills are organized by workflow phases (00-meta through 07-completion):
 
-**Debugging** (`skills/debugging/`)
-- **systematic-debugging** - 4-phase root cause process
-- **root-cause-tracing** - Find the real problem
-- **verification-before-completion** - Ensure it's actually fixed
-- **defense-in-depth** - Multiple validation layers
+**00-meta** - Understanding the system
+- **using-flows** - Introduction to the skills system
+- **writing-skills** - Create new skills following best practices
+- **testing-skills-with-subagents** - Validate skill quality
+- **sharing-skills** - Contribute skills back via branch and PR
 
-**Collaboration** (`skills/collaboration/`)
+**01-understanding** - Code comprehension
+- **codebase-research** - Systematic codebase exploration
+- **pattern-discovery** - Find existing patterns to follow
+- **knowledge-lineages** - Trace historical context of decisions
+
+**02-planning** - Design & architecture
 - **brainstorming** - Socratic design refinement
 - **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
+- **when-stuck** - Problem-solving technique dispatcher
+
+**03-preparation** - Safety nets
+- **characterization-testing** - Document legacy code behavior before refactoring
+- **defense-in-depth** - Multiple validation layers
+- **using-git-worktrees** - Parallel development branches
+
+**04-implementation** - Code writing
+- **test-driven-development** - RED-GREEN-REFACTOR cycle
+- **subagent-driven-development** - Fast iteration with quality gates
+- **condition-based-waiting** - Async test patterns
+- **strangler-fig-pattern** - Incremental legacy system replacement
+
+**05-debugging** - Problem solving
+- **systematic-debugging** - 4-phase root cause process
+- **root-cause-tracing** - Find the real problem
+- **dispatching-parallel-agents** - Concurrent debugging workflows
+
+**06-validation** - Quality assurance
+- **verification-before-completion** - Ensure it's actually fixed
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with quality gates
+- **testing-anti-patterns** - Common pitfalls to avoid
 
-**Meta** (`skills/meta/`)
-- **writing-skills** - Create new skills following best practices
-- **sharing-skills** - Contribute skills back via branch and PR
-- **testing-skills-with-subagents** - Validate skill quality
-- **using-flows** - Introduction to the skills system
+**07-completion** - Work finalization
+- **finishing-a-development-branch** - Merge/PR decision workflow
+- **handoff** - Context handoff for new Claude session
+
+**Cross-phase** - Used throughout workflow
+- **executing-plans** - Batch execution with checkpoints
 
 ### Commands
 
