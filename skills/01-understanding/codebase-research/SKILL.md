@@ -335,6 +335,73 @@ Thoroughness: very thorough
 """
 ```
 
+## Phase 4: Deep Archaeological Investigation (Optional)
+
+**When understanding WHY code exists or evolved this way:**
+
+Use these techniques from knowledge-lineages skill to trace historical context.
+
+**Decision Archaeology:**
+
+```python
+# Invoke Task tool with:
+subagent_type = "Explore"
+model = "haiku"
+prompt = """
+Explore historical context and decision-making.
+
+**CRITICAL:** Do NOT create temporary files (/tmp, docs/, etc).
+Aggregate all findings in memory and return complete report in your final message.
+All results must appear in function_results - no file creation.
+
+**Methodology:**
+1. Search git log for when key patterns were introduced
+2. Find Architecture Decision Records (ADRs) or design docs
+3. Locate issue/PR discussions about design choices
+4. Trace documentation evolution through git history
+5. Find comments explaining "why" in code
+
+**Git Commands to Use:**
+- git log -S "pattern" --all (find when pattern introduced)
+- git log -p --follow [file] (trace file evolution)
+- git log --diff-filter=D --summary (find deleted code)
+- git blame -w -C -C -C [file] (historical context)
+
+**Report Structure:**
+- Key Decisions: when made, who made them, why
+- Alternatives Considered: from PR/issue discussions
+- Evolution Timeline: how approach changed over time
+- Deleted/Abandoned Approaches: what was tried and removed
+- Context Preserved: comments explaining rationale
+
+Thoroughness: very thorough
+"""
+```
+
+**Consuming Archaeological Results:**
+
+After Task tool returns, historical context report appears in function_results.
+
+**Read and extract:**
+- Key Decisions → Understand why current architecture exists
+- Alternatives Considered → Learn what was rejected and why
+- Evolution Timeline → See how code evolved to current state
+- Deleted/Abandoned Approaches → Avoid repeating past mistakes
+- Context Preserved → Find wisdom in comments and docs
+
+**Use for:**
+- Understanding constraints that shaped current design
+- Avoiding proposals that were already tried and failed
+- Recognizing when conditions have changed enough to revisit old ideas
+- Documenting rationale for future maintainers
+
+**When to Use Archaeological Investigation:**
+- Before proposing major architectural changes
+- When encountering seemingly irrational design choices
+- When team members say "we tried that before"
+- When considering reverting to older approaches
+- When new team members question established patterns
+
 ## Key Principle
 
 **Act as documentarian, not consultant.** Report what exists with precise file:line references, concrete code snippets, and data flow diagrams. Do not suggest improvements unless explicitly requested.
