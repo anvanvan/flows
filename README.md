@@ -356,7 +356,7 @@ Skills live directly in this repository. To contribute:
 4. Use the `testing-skills-with-subagents` skill to validate quality
 5. Submit a PR
 
-See `skills/meta/writing-skills/SKILL.md` for the complete guide.
+See `skills/00-meta/writing-skills/SKILL.md` for the complete guide.
 
 ## Updating
 
