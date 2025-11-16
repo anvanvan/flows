@@ -30,9 +30,9 @@ Deploy this skill when:
 | Same problems recurring across domains | Meta-Pattern Recognition | See below |
 | Limited by assumptions | Inversion Exercise | See below |
 | Works locally but not at scale | Scale Game | See below |
-| Code behaves unexpectedly | @flows:systematic-debugging | `skills/05-debugging/systematic-debugging/` |
-| Can't understand existing code | @flows:codebase-research | `skills/01-understanding/codebase-research/` |
-| Unsure how to implement | @flows:pattern-discovery | `skills/01-understanding/pattern-discovery/` |
+| Code behaves unexpectedly | @flows:systematic-debugging | `skills/systematic-debugging/` |
+| Can't understand existing code | @flows:codebase-research | `skills/codebase-research/` |
+| Unsure how to implement | @flows:pattern-discovery | `skills/pattern-discovery/` |
 
 ## Embedded Techniques
 
