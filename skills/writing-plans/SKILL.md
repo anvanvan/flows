@@ -37,7 +37,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 > - **flows:subagent-driven-development** (Recommended): Fresh subagent per task with code review between tasks
 > - **flows:executing-plans** (Alternative): Batched execution with manual checkpoints
 >
-> Use whichever execution method the user invokes. If user calls /flows:execute-plan or /flows:execute-plan-gradual, they've chosen executing-plans.
+> Use whichever execution method the user invokes. If user calls /flows:execute-plan or /flows:execute-gradual, they've chosen executing-plans.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -329,7 +329,7 @@ After saving the plan, use AskUserQuestion to offer execution choices:
    - Description: "Dispatch fresh subagent per task with code review between tasks - fast iteration in current session"
 
 3. **"Execute in parallel session (gradual)"**
-   - Description: "Open new session, run `/flows:execute-plan-gradual` for batched execution with manual checkpoints"
+   - Description: "Open new session, run `/flows:execute-gradual` for batched execution with manual checkpoints"
 
 4. Auto-provided "Other" option allows refinement feedback
 
@@ -349,7 +349,7 @@ After saving the plan, use AskUserQuestion to offer execution choices:
 
 **If "Execute in parallel session (gradual)" selected:**
 - Guide them to open new session in worktree
-- Tell them to run `/flows:execute-plan-gradual`
+- Tell them to run `/flows:execute-gradual`
 - **REQUIRED SUB-SKILL:** New session uses flows:executing-plans
 
 **If "Other" / refinement feedback provided:**
