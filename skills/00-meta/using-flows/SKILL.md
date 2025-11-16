@@ -48,6 +48,44 @@ If you catch yourself thinking ANY of these thoughts, STOP. You are rationalizin
 
 If a skill for your task exists, you must use it or you will fail at your task.
 
+## Understanding Workflow Phases
+
+**Skills are organized by development lifecycle phases:**
+
+```
+00-meta/          ← Start here to understand the system
+    ↓
+01-understanding/ ← Comprehend existing code
+    ↓
+02-planning/      ← Design and architecture
+    ↓
+03-preparation/   ← Set up safety nets
+    ↓
+04-implementation/← Write code
+    ↓
+05-debugging/     ← Fix issues
+    ↓
+06-validation/    ← Ensure quality
+    ↓
+07-completion/    ← Finalize work
+```
+
+**Phase structure guides natural workflow progression:**
+- Start with understanding before planning
+- Prepare safety nets before implementing
+- Debug systematically when issues arise
+- Validate before completing
+
+**Key phases:**
+- **00-meta** - Learn the skill system itself (using-flows, writing-skills)
+- **01-understanding** - Research code (codebase-research, pattern-discovery, knowledge-lineages)
+- **02-planning** - Design solutions (brainstorming, writing-plans, when-stuck)
+- **03-preparation** - Create safety (characterization-testing, using-git-worktrees)
+- **04-implementation** - Build features (test-driven-development, strangler-fig-pattern)
+- **05-debugging** - Solve problems (systematic-debugging, root-cause-tracing)
+- **06-validation** - Verify quality (verification-before-completion, requesting-code-review)
+- **07-completion** - Ship work (finishing-a-development-branch, handoff)
+
 ## Discovering Codebase Research Skills
 
 **NEW: When user mentions unfamiliar code or asks "how does X work?":**
