@@ -449,7 +449,7 @@ If systematic investigation reveals issue is truly environmental, timing-depende
 **Complementary skills:**
 - **@flows:defense-in-depth** - Add validation at multiple layers after finding root cause
 - **@flows:condition-based-waiting** - Replace arbitrary timeouts identified in Phase 2
-- **verification-before-completion** - Verify fix worked before claiming success
+- **@flows:verification-before-completion** - Verify fix worked before claiming success
 
 ## Real-World Impact
 
