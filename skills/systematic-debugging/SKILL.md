@@ -51,7 +51,7 @@ You MUST complete each phase before proceeding to the next.
 
 **REQUIRED when debugging code without tests:**
 
-**REQUIRED SUB-SKILL:** Use flows:characterization-testing first
+**REQUIRED SUB-SKILL:** Use @flows:characterization-testing first
 
 Before attempting to debug untested legacy code:
 1. Create characterization tests for the buggy behavior
@@ -263,7 +263,7 @@ If findings conflict, dispatch additional targeted Explore agents to clarify spe
 
    **WHEN error is deep in call stack:**
 
-   **REQUIRED SUB-SKILL:** Use flows:root-cause-tracing for backward tracing technique
+   **REQUIRED SUB-SKILL:** Use @flows:root-cause-tracing for backward tracing technique
 
    **Quick version:**
    - Where does bad value originate?
@@ -340,7 +340,7 @@ If findings conflict, dispatch additional targeted Explore agents to clarify spe
    - Automated test if possible
    - One-off test script if no framework
    - MUST have before fixing
-   - **REQUIRED SUB-SKILL:** Use flows:test-driven-development for writing proper failing tests
+   - **REQUIRED SUB-SKILL:** Use @flows:test-driven-development for writing proper failing tests
 
 2. **Implement Single Fix**
    - Address the root cause identified
@@ -442,13 +442,13 @@ If systematic investigation reveals issue is truly environmental, timing-depende
 ## Integration with Other Skills
 
 **This skill requires using:**
-- **characterization-testing** - REQUIRED when debugging untested legacy code (see Phase 0)
-- **root-cause-tracing** - REQUIRED when error is deep in call stack (see Phase 1, Step 6)
-- **test-driven-development** - REQUIRED for creating failing test case (see Phase 4, Step 1)
+- **@flows:characterization-testing** - REQUIRED when debugging untested legacy code (see Phase 0)
+- **@flows:root-cause-tracing** - REQUIRED when error is deep in call stack (see Phase 1, Step 6)
+- **@flows:test-driven-development** - REQUIRED for creating failing test case (see Phase 4, Step 1)
 
 **Complementary skills:**
-- **defense-in-depth** - Add validation at multiple layers after finding root cause
-- **condition-based-waiting** - Replace arbitrary timeouts identified in Phase 2
+- **@flows:defense-in-depth** - Add validation at multiple layers after finding root cause
+- **@flows:condition-based-waiting** - Replace arbitrary timeouts identified in Phase 2
 - **verification-before-completion** - Verify fix worked before claiming success
 
 ## Real-World Impact
