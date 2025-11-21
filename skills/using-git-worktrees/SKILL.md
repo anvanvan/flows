@@ -257,5 +257,5 @@ Ready to implement auth feature
 - Any skill needing isolated workspace
 
 **Pairs with:**
-- **finishing-a-development-branch** - REQUIRED for cleanup after work complete
-- **executing-plans** or **subagent-driven-development** - Work happens in this worktree
+- **@flows:finishing-a-development-branch** - REQUIRED for cleanup after work complete
+- **@flows:executing-plans** or **@flows:subagent-driven-development** - Work happens in this worktree
