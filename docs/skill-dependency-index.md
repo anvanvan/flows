@@ -315,6 +315,6 @@ The skill dependency graph is acyclic. All dependencies flow cleanly:
 
 ## See Also
 
-- `/Users/tuan/tools/flows/docs/agent-invocation-patterns.md` - How to invoke agents
-- `/Users/tuan/tools/flows/docs/task-tool-mechanics.md` - Result consumption patterns
-- `/Users/tuan/tools/flows/README.md` - Main documentation
+- `./agent-invocation-patterns.md` - How to invoke agents
+- `./task-tool-mechanics.md` - Result consumption patterns
+- `../README.md` - Main documentation

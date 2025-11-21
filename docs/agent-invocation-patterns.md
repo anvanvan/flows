@@ -147,7 +147,7 @@ prompt = "[Full review specification from requesting-code-review/code-reviewer.m
 
 ## Result Consumption Patterns
 
-See `/Users/tuan/tools/flows/docs/task-tool-mechanics.md` for full details.
+See `./task-tool-mechanics.md` for full details.
 
 **Pattern 1: Narrative (Explore agents)**
 - Read function_results directly as narrative report
@@ -221,6 +221,6 @@ Before proposing approaches, use @agent-web-researcher to verify:
 - writing-plans (optional web-researcher)
 
 **See also:**
-- `/Users/tuan/tools/flows/docs/task-tool-mechanics.md` - Result consumption patterns
-- `/Users/tuan/tools/flows/agents/code-reviewer.md` - Code reviewer specification
-- `/Users/tuan/tools/flows/agents/web-researcher.md` - Web researcher specification
+- `./task-tool-mechanics.md` - Result consumption patterns
+- `../agents/code-reviewer.md` - Code reviewer specification
+- `../agents/web-researcher.md` - Web researcher specification
