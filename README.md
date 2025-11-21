@@ -188,6 +188,12 @@ The commit-SHA-list approach enables safe concurrent execution:
 
 For details, see [Concurrent-Safe Code Review](docs/concurrent-safe-code-review.md).
 
+## Documentation
+
+- [Agent Invocation Patterns](docs/agent-invocation-patterns.md) - When and how to invoke agents
+- [Skill Dependency Index](docs/skill-dependency-index.md) - Skill dependencies and cross-references
+- [Task Tool Mechanics](docs/task-tool-mechanics.md) - How agents return results
+
 A comprehensive skills library of proven techniques, patterns, and workflows for AI coding assistants.
 
 ## What You Get
